@@ -1,0 +1,1859 @@
+// Plug and Go catalogue — Phase 4 source of truth.
+// Money is integer paise. Availability is event data. Tariffs are versioned.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DataSource {
+  staff_survey
+  host_report
+  operator_admin
+  csms_ocpp
+  photo_evidence
+  other
+}
+
+enum PublicationStatus {
+  draft
+  pending_approval
+  published
+  archived
+}
+
+enum HostType {
+  mall
+  hotel
+  workplace
+  fuel_station
+  depot
+  residential
+  highway
+  other
+}
+
+enum ContractStatus {
+  prospect
+  active
+  paused
+  ended
+  unknown
+}
+
+enum AccessType {
+  public
+  restricted
+  guest_only
+  hotel_guest
+  members
+  private
+  unknown
+}
+
+enum OperationalLifecycle {
+  planned
+  commissioning
+  open
+  temporarily_closed
+  decommissioned
+}
+
+enum PowerType {
+  ac
+  dc
+  unknown
+}
+
+enum InstallationStatus {
+  installed
+  planned
+  removed
+}
+
+enum ConnectorType {
+  ccs2
+  type2_ac
+  chademo
+  gbt_dc
+  gbt_ac
+  bharat_dc_001
+  bharat_ac_001
+  other
+  unknown
+}
+
+enum RecordedStatus {
+  available
+  in_use
+  faulted
+  offline
+  unknown
+}
+
+enum AvailabilitySource {
+  csms_ocpp
+  operator_override
+  technician
+  heartbeat_timeout
+  manual_import
+}
+
+enum TariffApprovalStatus {
+  draft
+  approved
+  rejected
+  superseded
+}
+
+enum TimeBand {
+  all_hours
+  solar
+  non_solar
+  peak
+  off_peak
+  custom
+}
+
+enum DiscountKind {
+  none
+  flat_paise
+  percent_bps
+}
+
+enum LineItemCode {
+  energy
+  service
+  parking
+  idle
+  reservation
+  custom
+}
+
+enum LineCalculation {
+  per_kwh
+  per_minute
+  flat
+}
+
+enum MediaKind {
+  entrance
+  parking_bay
+  charger
+  signage
+  connector
+  amenities
+  team
+  other
+}
+
+enum SupportIssueCategory {
+  did_not_start
+  connector_issue
+  wrong_data
+  access_parking
+  payment
+  refund
+  unsafe_fault
+  billing
+  host_enquiry
+  fleet_enquiry
+  payment_pending
+  payment_failed
+  booking_unavailable
+  cancellation
+  refund_status
+  billing_receipt
+  general_issue
+  other
+}
+
+enum SupportIssueStatus {
+  open
+  pending_user
+  pending_ops
+  resolved
+  closed
+}
+
+enum SupportChannel {
+  web_form
+  phone
+  email
+  later_in_app
+}
+
+enum StaffRole {
+  content_manager
+  station_operator
+  support
+  finance
+  technician
+  super_admin
+  host_admin
+  host_viewer
+  fleet_admin
+  fleet_viewer
+}
+
+enum IncidentSeverity {
+  critical
+  high
+  medium
+  low
+}
+
+enum IncidentStatus {
+  new
+  acknowledged
+  diagnosing
+  technician_assigned
+  waiting_on_vendor
+  resolved
+  verification_required
+  closed
+}
+
+enum IncidentTrigger {
+  manual
+  heartbeat_stale
+  heartbeat_offline
+  command_failure
+  connector_faulted
+  meter_anomaly
+  support_repeat
+}
+
+enum IncidentEventKind {
+  status
+  assignment
+  note_internal
+  note_customer
+  evidence
+  escalation
+  verification
+}
+
+enum WorkOrderStatus {
+  queued
+  in_progress
+  paused
+  completed
+  cancelled
+}
+
+enum ChecklistOutcome {
+  pass
+  fail
+  not_applicable
+}
+
+enum CommandApprovalAction {
+  remote_start
+  remote_stop
+  reset
+  change_configuration
+}
+
+enum CommandApprovalStatus {
+  pending
+  approved
+  rejected
+  expired
+  break_glass
+  dispatched
+  denied
+}
+
+enum ExportJobKind {
+  finance_refunds
+  ops_incidents
+  compliance_station
+  host_summary
+  fleet_activity
+}
+
+enum ExportJobStatus {
+  queued
+  running
+  completed
+  failed
+  expired
+}
+
+enum DeletionRequestStatus {
+  received
+  cancelled
+}
+
+enum DataExportStatus {
+  completed
+}
+
+enum BookingPolicyApprovalStatus {
+  draft
+  approved
+  archived
+}
+
+enum BookingStatus {
+  draft
+  pending_payment
+  payment_processing
+  confirmed
+  cancelled
+  expired
+  no_show
+  payment_failed
+  refund_pending
+  refunded
+  support_review
+}
+
+enum PaymentAttemptStatus {
+  created
+  processing
+  succeeded
+  failed
+  cancelled
+  expired
+}
+
+enum RefundStatus {
+  requested
+  pending_review
+  pending_provider
+  processing
+  completed
+  failed
+  rejected
+}
+
+enum FinancialDocumentKind {
+  booking_receipt
+  charging_invoice_placeholder
+}
+
+enum FinancialDocumentStatus {
+  issued
+  void
+  not_issuable_until_session
+}
+
+enum BookingActorType {
+  driver
+  staff
+  system
+  webhook
+}
+
+enum OcppProtocolVersion {
+  ocpp_1_6
+  ocpp_2_0_1
+  ocpp_2_1
+}
+
+enum ChargePointCommissioningState {
+  draft
+  test
+  pilot
+  production
+  disabled
+}
+
+enum ChargePointConnectionState {
+  disconnected
+  connecting
+  connected
+  rejected
+}
+
+enum OcppSecurityProfile {
+  unconfigured
+  basic_auth
+  tls_server
+  tls_mutual
+}
+
+enum RemoteCommandType {
+  remote_start
+  remote_stop
+}
+
+enum RemoteCommandStatus {
+  queued
+  dispatching
+  accepted
+  rejected
+  timeout
+  failed
+  cancelled
+  reconciled_started
+  reconciled_stopped
+}
+
+enum ChargingSessionStatus {
+  requested
+  authorizing
+  starting
+  charging
+  stopping
+  completed
+  failed
+  timed_out
+  interrupted
+  support_review
+}
+
+enum DeviceHealthSeverity {
+  info
+  warning
+  critical
+}
+
+enum OcppParseResult {
+  accepted
+  ignored
+  duplicate
+  malformed
+  unsupported_version
+  unauthorized
+}
+
+model Organisation {
+  id                 String    @id @default(cuid())
+  legalName          String
+  brandName          String
+  registeredAddress  String
+  gstin              String?
+  supportPhone       String?
+  supportEmail       String?
+  grievanceContact   String?
+  website            String?
+  isDemo             Boolean   @default(false)
+  dataSource         DataSource
+  verifiedBy         String?
+  lastVerifiedAt     DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  hosts              Host[]
+  stations           Station[]
+  staffMemberships   StaffMembership[]
+  fleetOrganisations FleetOrganisation[]
+}
+
+model Host {
+  id                  String         @id @default(cuid())
+  organisationId      String
+  organisation        Organisation   @relation(fields: [organisationId], references: [id])
+  hostLegalName       String
+  hostDisplayName     String
+  hostType            HostType
+  primaryContactName  String?
+  primaryContactPhone String?
+  primaryContactEmail String?
+  contractStatus      ContractStatus @default(unknown)
+  notes               String?
+  isDemo              Boolean        @default(false)
+  dataSource          DataSource
+  verifiedBy          String?
+  lastVerifiedAt      DateTime?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  stations            Station[]
+  memberships         HostMembership[]
+
+  @@index([organisationId])
+}
+
+model Station {
+  id                       String                @id @default(cuid())
+  organisationId           String
+  organisation             Organisation          @relation(fields: [organisationId], references: [id])
+  hostId                   String
+  host                     Host                  @relation(fields: [hostId], references: [id])
+  name                     String
+  slug                     String                @unique
+  city                     String
+  state                    String
+  latitude                 Decimal               @db.Decimal(9, 6)
+  longitude                Decimal               @db.Decimal(9, 6)
+  addressLine1             String
+  addressLine2             String?
+  locality                 String?
+  district                 String?
+  pincode                  String
+  country                  String                @default("IN")
+  landmark                 String?
+  arrivalInstructions      String?
+  accessType               AccessType            @default(unknown)
+  accessHoursSummary       String
+  accessHoursStructured    Json?
+  accessRestrictions       String?
+  is24_7                   Boolean?
+  parkingDetails           String?
+  parkingFeeApplies        Boolean?
+  bookingRequired          Boolean?
+  amenities                String[]              @default([])
+  accessibilityNotes       String?
+  accessibleBayCount       Int?
+  supportPhoneOverride     String?
+  supportEmailOverride     String?
+  emergencyInstructions    String?
+  operationalLifecycle     OperationalLifecycle  @default(planned)
+  publicationStatus        PublicationStatus     @default(draft)
+  paymentMethods           String[]              @default([])
+  authenticationMethods    String[]              @default([])
+  compatibleVehicleNotes   String?
+  internalNotes            String?
+  isDemo                   Boolean               @default(false)
+  dataSource               DataSource
+  verifiedBy               String?
+  lastVerifiedAt           DateTime?
+  statusUpdatedAt          DateTime?
+  publishedAt              DateTime?
+  archivedAt               DateTime?
+  revision                 Int                   @default(1)
+  publicRef                String                @unique @default(cuid())
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+  evses                    Evse[]
+  connectors               Connector[]
+  media                    StationMedia[]
+  tariffs                  TariffVersion[]
+  availabilityEvents       ConnectorAvailabilityEvent[]
+  verifications            StationVerification[]
+  supportIssues            SupportIssue[]
+  routeStops               RouteStop[]
+  savedByDrivers           SavedStation[]
+  bookingPolicies          BookingPolicy[]
+  bookings                 Booking[]
+  chargePoints             ChargePoint[]
+  chargingSessions         ChargingSession[]
+  assignments              StationAssignment[]
+  incidents                Incident[]
+  workOrders               TechnicianWorkOrder[]
+  commandApprovals         CommandApproval[]
+
+  @@index([publicationStatus, city])
+  @@index([state, city])
+  @@index([isDemo])
+}
+
+model StationMedia {
+  id                 String             @id @default(cuid())
+  stationId          String
+  station            Station            @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  kind               MediaKind
+  storageUrl         String
+  caption            String?
+  altText            String
+  capturedAt         DateTime?
+  rightsConfirmed    Boolean            @default(false)
+  publicationStatus  PublicationStatus  @default(draft)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([stationId, publicationStatus])
+}
+
+model Evse {
+  id                 String              @id @default(cuid())
+  stationId          String
+  station            Station             @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  evseLabel          String
+  ocppChargePointId  String?
+  ocppEvseId         String?
+  maxPowerWatts      Int
+  powerType          PowerType
+  installationStatus InstallationStatus  @default(installed)
+  serialNumber       String?
+  firmwareNotes      String?
+  dataSource         DataSource
+  verifiedBy         String?
+  lastVerifiedAt     DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  connectors         Connector[]
+  availabilityEvents ConnectorAvailabilityEvent[]
+  chargePoints       ChargePoint[]
+
+  @@index([stationId])
+}
+
+model Connector {
+  id                       String              @id @default(cuid())
+  evseId                   String
+  evse                     Evse                @relation(fields: [evseId], references: [id], onDelete: Cascade)
+  stationId                String
+  station                  Station             @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  connectorIndex           Int
+  ocppConnectorId          Int?
+  connectorType            ConnectorType
+  maxPowerWatts            Int
+  maxCurrentA              Int?
+  voltageV                 Int?
+  cableAttached            Boolean?
+  installationStatus       InstallationStatus  @default(installed)
+  vehicleCompatibilityNotes String?
+  dataSource               DataSource
+  verifiedBy               String?
+  lastVerifiedAt           DateTime?
+  publicRef                String              @unique @default(cuid())
+  createdAt                DateTime            @default(now())
+  updatedAt                DateTime            @updatedAt
+  tariffs                  TariffVersion[]
+  availabilityEvents       ConnectorAvailabilityEvent[]
+  currentStatus            CurrentConnectorStatus?
+  supportIssues            SupportIssue[]
+  bookings                 Booking[]
+  reservationHolds         ReservationHold[]
+  chargePointConnectors    ChargePointConnector[]
+  chargingSessions         ChargingSession[]
+  statusSnapshots          ConnectorStatusSnapshot[]
+  incidents                Incident[]
+
+  @@unique([evseId, connectorIndex])
+  @@index([stationId])
+}
+
+model TariffVersion {
+  id                 String                @id @default(cuid())
+  stationId          String
+  station            Station               @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  connectorId        String?
+  connector          Connector?            @relation(fields: [connectorId], references: [id])
+  connectorType      ConnectorType?
+  timeBand           TimeBand              @default(all_hours)
+  timeBandNotes      String?
+  currency           String                @default("INR")
+  energyPaisePerKwh  Int
+  servicePaisePerKwh Int                   @default(0)
+  parkingPaiseFlat   Int                   @default(0)
+  parkingPaisePerMin Int                   @default(0)
+  idlePaisePerMin    Int                   @default(0)
+  idleGraceMinutes   Int                   @default(0)
+  reservationPaise   Int                   @default(0)
+  gstRateBps         Int
+  discountKind       DiscountKind          @default(none)
+  discountName       String?
+  discountValue      Int                   @default(0)
+  estimateDisclaimer String                @default("This is an estimate, not a tax invoice. The session invoice may differ.")
+  effectiveFrom      DateTime
+  effectiveTo        DateTime?
+  approvalStatus     TariffApprovalStatus  @default(draft)
+  approvedBy         String?
+  approvedAt         DateTime?
+  dataSource         DataSource
+  verifiedBy         String?
+  lastVerifiedAt     DateTime?
+  supersedesId       String?
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  lineItems          TariffLineItem[]
+
+  @@index([stationId, approvalStatus, effectiveFrom])
+  @@index([connectorId])
+}
+
+model TariffLineItem {
+  id              String          @id @default(cuid())
+  tariffVersionId String
+  tariff          TariffVersion   @relation(fields: [tariffVersionId], references: [id], onDelete: Cascade)
+  sortOrder       Int
+  code            LineItemCode
+  label           String
+  calculation     LineCalculation
+  ratePaise       Int
+  graceMinutes    Int             @default(0)
+
+  @@index([tariffVersionId])
+}
+
+model ConnectorAvailabilityEvent {
+  id               String              @id @default(cuid())
+  stationId        String
+  station          Station             @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  evseId           String?
+  evse             Evse?               @relation(fields: [evseId], references: [id])
+  connectorId      String
+  connector        Connector           @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+  recordedStatus   RecordedStatus
+  source           AvailabilitySource
+  sourceEventId    String?
+  occurredAt       DateTime
+  receivedAt       DateTime            @default(now())
+  statusUpdatedAt  DateTime
+  payload          Json?
+  overrideReason   String?
+  overrideExpiresAt DateTime?
+  createdAt        DateTime            @default(now())
+
+  @@index([connectorId, occurredAt])
+  @@index([stationId, occurredAt])
+}
+
+model CurrentConnectorStatus {
+  connectorId       String              @id
+  connector         Connector           @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+  recordedStatus    RecordedStatus
+  source            AvailabilitySource
+  statusUpdatedAt   DateTime
+  lastEventId       String?
+  overrideReason    String?
+  overrideExpiresAt DateTime?
+  updatedAt         DateTime            @updatedAt
+}
+
+model StationVerification {
+  id         String   @id @default(cuid())
+  stationId  String
+  station    Station  @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  verifiedBy String
+  verifiedAt DateTime @default(now())
+  scope      String
+  notes      String?
+
+  @@index([stationId, verifiedAt])
+}
+
+model StaffAuditEvent {
+  id            String    @id @default(cuid())
+  actorId       String
+  actorRole     StaffRole
+  action        String
+  targetType    String
+  targetId      String
+  beforeSummary Json?
+  afterSummary  Json?
+  requestId     String?
+  createdAt     DateTime  @default(now())
+
+  @@index([targetType, targetId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model SupportIssue {
+  id              String                @id @default(cuid())
+  publicReference String                @unique
+  stationId       String?
+  station         Station?              @relation(fields: [stationId], references: [id])
+  connectorId     String?
+  connector       Connector?            @relation(fields: [connectorId], references: [id])
+  driverId        String?
+  driver          Driver?               @relation(fields: [driverId], references: [id])
+  bookingId       String?
+  booking         Booking?              @relation(fields: [bookingId], references: [id])
+  chargingSessionId String?
+  chargingSession   ChargingSession?    @relation(fields: [chargingSessionId], references: [id])
+  category        SupportIssueCategory
+  channel         SupportChannel        @default(web_form)
+  status          SupportIssueStatus    @default(open)
+  description     String
+  reporterName    String?
+  reporterPhone   String?
+  reporterEmail   String?
+  paymentState    String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  assignments     SupportTicketAssignment[]
+  incidents       Incident[]
+  notes           SupportIssueNote[]
+
+  @@index([stationId, status])
+  @@index([driverId, createdAt])
+  @@index([bookingId])
+  @@index([chargingSessionId])
+}
+
+model IdempotencyRecord {
+  id           String   @id @default(cuid())
+  key          String
+  actorId      String
+  route        String
+  requestHash  String
+  statusCode   Int
+  responseJson Json
+  createdAt    DateTime @default(now())
+
+  @@unique([key, actorId, route])
+}
+
+// --- Phase 6 editorial content (city pages, insights, route guides) ---
+
+model ContentAuthor {
+  id                 String               @id @default(cuid())
+  displayName        String
+  roleTitle          String?
+  bio                String?
+  publicationStatus  PublicationStatus    @default(draft)
+  internalNotes      String?
+  isDemo             Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  authoredInsights   InsightArticle[]     @relation("InsightAuthor")
+  reviewedInsights   InsightArticle[]     @relation("InsightReviewer")
+  reviewedCities     CityLandingContent[] @relation("CityReviewer")
+  reviewedRoutes     RouteGuide[]         @relation("RouteReviewer")
+}
+
+model CityLandingContent {
+  id                  String             @id @default(cuid())
+  slug                String             @unique
+  cityName            String
+  stateName           String
+  intro               String
+  accessGuidance      String
+  connectorGuidance   String
+  localNotes          String?
+  showFleetModule     Boolean            @default(false)
+  locale              String             @default("en-IN")
+  seoTitle            String?
+  seoDescription      String?
+  publicationStatus   PublicationStatus  @default(draft)
+  lastReviewedAt      DateTime?
+  reviewedById        String?
+  reviewedBy          ContentAuthor?     @relation("CityReviewer", fields: [reviewedById], references: [id])
+  publishedAt         DateTime?
+  internalNotes       String?
+  isDemo              Boolean            @default(false)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  faqs                ContentFaq[]
+
+  @@index([publicationStatus, slug])
+  @@index([cityName])
+}
+
+model InsightArticle {
+  id                   String             @id @default(cuid())
+  slug                 String             @unique
+  title                String
+  excerpt              String
+  body                 String
+  locale               String             @default("en-IN")
+  seoTitle             String?
+  seoDescription       String?
+  publicationStatus    PublicationStatus  @default(draft)
+  authorId             String?
+  author               ContentAuthor?     @relation("InsightAuthor", fields: [authorId], references: [id])
+  reviewerId           String?
+  reviewer             ContentAuthor?     @relation("InsightReviewer", fields: [reviewerId], references: [id])
+  publishedAt          DateTime?
+  lastReviewedAt       DateTime?
+  relatedStationSlugs  String[]           @default([])
+  relatedGuideHrefs    String[]           @default([])
+  relatedCitySlug      String?
+  internalNotes        String?
+  isDemo               Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  faqs                 ContentFaq[]
+
+  @@index([publicationStatus])
+}
+
+model RouteGuide {
+  id                 String             @id @default(cuid())
+  slug               String             @unique
+  originName         String
+  destinationName    String
+  originSlug         String
+  destinationSlug    String
+  routeNotes         String
+  accessCaveats      String
+  locale             String             @default("en-IN")
+  seoTitle           String?
+  seoDescription     String?
+  publicationStatus  PublicationStatus  @default(draft)
+  lastReviewedAt     DateTime?
+  reviewedById       String?
+  reviewedBy         ContentAuthor?     @relation("RouteReviewer", fields: [reviewedById], references: [id])
+  publishedAt        DateTime?
+  internalNotes      String?
+  isDemo             Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  stops              RouteStop[]
+  faqs               ContentFaq[]
+
+  @@index([publicationStatus, slug])
+  @@unique([originSlug, destinationSlug])
+}
+
+model RouteStop {
+  id           String     @id @default(cuid())
+  routeId      String
+  route        RouteGuide @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  stationId    String?
+  station      Station?   @relation(fields: [stationId], references: [id])
+  stationSlug  String
+  sortOrder    Int
+  stopNotes    String?
+
+  @@index([routeId, sortOrder])
+}
+
+model ContentFaq {
+  id         String              @id @default(cuid())
+  question   String
+  answer     String
+  sortOrder  Int                 @default(0)
+  cityId     String?
+  city       CityLandingContent? @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  insightId  String?
+  insight    InsightArticle?     @relation(fields: [insightId], references: [id], onDelete: Cascade)
+  routeId    String?
+  route      RouteGuide?         @relation(fields: [routeId], references: [id], onDelete: Cascade)
+}
+
+model Driver {
+  id           String    @id @default(cuid())
+  phoneE164    String    @unique
+  phoneCountry String    @default("IN")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+  deletedAt    DateTime?
+
+  sessions               DriverSession[]
+  vehicles               DriverVehicle[]
+  savedStations          SavedStation[]
+  notificationPreference NotificationPreference?
+  exportRequests         DataExportRequest[]
+  deletionRequests       AccountDeletionRequest[]
+  auditEvents            DriverAuditEvent[]
+  bookings               Booking[]
+  paymentAttempts        PaymentAttempt[]
+  refunds                Refund[]
+  financialDocuments     FinancialDocument[]
+  supportIssues          SupportIssue[]
+  chargingSessions       ChargingSession[]
+  remoteCommands         RemoteCommand[]
+  sessionAuthorizations  SessionAuthorization[]
+  fleetDriverRefs        FleetDriverRef[]
+}
+
+model DriverAuthChallenge {
+  id                String    @id @default(cuid())
+  phoneE164         String
+  codeHash          String
+  salt              String
+  expiresAt         DateTime
+  attemptCount      Int       @default(0)
+  maxAttempts       Int       @default(5)
+  resendAvailableAt DateTime
+  consumedAt        DateTime?
+  createdIpHash     String?
+  createdAt         DateTime  @default(now())
+
+  @@index([phoneE164, createdAt])
+  @@index([expiresAt])
+}
+
+model DriverSession {
+  id         String    @id @default(cuid())
+  driverId   String
+  driver     Driver    @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  ipHash     String?
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  lastSeenAt DateTime  @default(now())
+
+  @@index([driverId, revokedAt])
+}
+
+model DriverVehicle {
+  id            String        @id @default(cuid())
+  driverId      String
+  driver        Driver        @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  make          String
+  model         String
+  connectorType ConnectorType
+  batteryKwh    Int?
+  nickname      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([driverId, createdAt])
+}
+
+model SavedStation {
+  id        String   @id @default(cuid())
+  driverId  String
+  driver    Driver   @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  stationId String
+  station   Station  @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([driverId, stationId])
+  @@index([driverId])
+}
+
+model NotificationPreference {
+  id             String   @id @default(cuid())
+  driverId       String   @unique
+  driver         Driver   @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  productUpdates Boolean  @default(true)
+  marketingSms   Boolean  @default(false)
+  marketingEmail Boolean  @default(false)
+  updatedAt      DateTime @updatedAt
+}
+
+model DataExportRequest {
+  id          String           @id @default(cuid())
+  driverId    String
+  driver      Driver           @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  status      DataExportStatus @default(completed)
+  createdAt   DateTime         @default(now())
+  completedAt DateTime         @default(now())
+
+  @@index([driverId, createdAt])
+}
+
+model AccountDeletionRequest {
+  id          String                @id @default(cuid())
+  driverId    String
+  driver      Driver                @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  status      DeletionRequestStatus @default(received)
+  confirmedAt DateTime
+  createdAt   DateTime              @default(now())
+
+  @@index([driverId, createdAt])
+}
+
+model DriverAuditEvent {
+  id         String   @id @default(cuid())
+  driverId   String?
+  driver     Driver?  @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  action     String
+  targetType String?
+  targetId   String?
+  summary    Json?
+  requestId  String?
+  createdAt  DateTime @default(now())
+
+  @@index([driverId, createdAt])
+  @@index([action, createdAt])
+}
+
+model AuthRateBucket {
+  key            String   @id
+  count          Int      @default(0)
+  windowStartsAt DateTime
+  updatedAt      DateTime @updatedAt
+}
+
+model BookingPolicy {
+  id                        String                       @id @default(cuid())
+  stationId                 String
+  station                   Station                      @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  bookingEnabled            Boolean                      @default(false)
+  approvalStatus            BookingPolicyApprovalStatus  @default(draft)
+  effectiveFrom             DateTime
+  effectiveTo               DateTime?
+  eligibleConnectorIds      String[]                     @default([])
+  arrivalWindowMinutes      Int
+  reservationDurationMinutes Int
+  capacityLimit             Int
+  bookingFeePaise           Int                          @default(0)
+  gstRateBps                Int
+  cancellationAllowed       Boolean                      @default(false)
+  cancellationCutoffMinutes Int?
+  refundOnCancel            Boolean                      @default(false)
+  refundPercentBps          Int                          @default(0)
+  cancellationPolicyText    String
+  noShowPolicyText          String
+  refundPolicyText          String
+  supportContactText        String
+  version                   Int                          @default(1)
+  approvedBy                String?
+  approvedAt                DateTime?
+  createdAt                 DateTime                     @default(now())
+  updatedAt                 DateTime                     @updatedAt
+  bookings                  Booking[]
+
+  @@index([stationId, approvalStatus, effectiveFrom])
+}
+
+model Booking {
+  id                String                 @id @default(cuid())
+  publicRef         String                 @unique @default(cuid())
+  referenceCode     String                 @unique
+  driverId          String
+  driver            Driver                 @relation(fields: [driverId], references: [id], onDelete: Restrict)
+  stationId         String
+  station           Station                @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  connectorId       String
+  connector         Connector              @relation(fields: [connectorId], references: [id], onDelete: Restrict)
+  policyId          String
+  policy            BookingPolicy          @relation(fields: [policyId], references: [id], onDelete: Restrict)
+  policyVersion     Int
+  status            BookingStatus          @default(pending_payment)
+  windowStart       DateTime
+  windowEnd         DateTime
+  holdExpiresAt     DateTime?
+  feePaise          Int
+  gstPaise          Int
+  totalPaise        Int
+  currency          String                 @default("INR")
+  policySnapshot    Json
+  tariffSnapshot    Json?
+  confirmedAt       DateTime?
+  cancelledAt       DateTime?
+  cancelReason      String?
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  hold              ReservationHold?
+  statusHistory     BookingStatusHistory[]
+  paymentAttempts   PaymentAttempt[]
+  refunds           Refund[]
+  documents         FinancialDocument[]
+  supportIssues     SupportIssue[]
+  chargingSessions  ChargingSession[]
+
+  @@index([driverId, createdAt])
+  @@index([connectorId, windowStart, windowEnd])
+  @@index([status, holdExpiresAt])
+}
+
+model ReservationHold {
+  id           String    @id @default(cuid())
+  bookingId    String    @unique
+  booking      Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  connectorId  String
+  connector    Connector @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+  windowStart  DateTime
+  windowEnd    DateTime
+  expiresAt    DateTime
+  releasedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([connectorId, windowStart, windowEnd])
+  @@index([expiresAt, releasedAt])
+}
+
+model BookingStatusHistory {
+  id         String           @id @default(cuid())
+  bookingId  String
+  booking    Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  fromStatus BookingStatus?
+  toStatus   BookingStatus
+  actorType  BookingActorType
+  actorId    String?
+  reason     String?
+  createdAt  DateTime         @default(now())
+
+  @@index([bookingId, createdAt])
+}
+
+model PaymentAttempt {
+  id                 String               @id @default(cuid())
+  bookingId          String
+  booking            Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  driverId           String
+  driver             Driver               @relation(fields: [driverId], references: [id], onDelete: Restrict)
+  status             PaymentAttemptStatus @default(created)
+  amountPaise        Int
+  currency           String               @default("INR")
+  provider           String
+  providerOrderId    String?
+  providerPaymentId  String?
+  checkoutMode       String
+  idempotencyKey     String               @unique
+  failureCode        String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  refunds            Refund[]
+
+  @@index([bookingId, createdAt])
+  @@index([providerOrderId])
+}
+
+model PaymentWebhookEvent {
+  id                String    @id @default(cuid())
+  provider          String
+  providerEventId   String    @unique
+  eventType         String
+  signatureValid    Boolean
+  payloadHash       String
+  processingResult  String?
+  processedAt       DateTime?
+  createdAt         DateTime  @default(now())
+
+  @@index([createdAt])
+}
+
+model FinancialDocument {
+  id          String                    @id @default(cuid())
+  bookingId   String
+  booking     Booking                   @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  driverId    String
+  driver      Driver                    @relation(fields: [driverId], references: [id], onDelete: Restrict)
+  kind        FinancialDocumentKind
+  status      FinancialDocumentStatus
+  number      String                    @unique
+  issuedAt    DateTime?
+  subtotalPaise Int
+  gstPaise    Int
+  totalPaise  Int
+  currency    String                    @default("INR")
+  breakdown   Json
+  note        String
+  createdAt   DateTime                  @default(now())
+
+  @@index([driverId, createdAt])
+  @@index([bookingId, kind])
+}
+
+model Refund {
+  id                 String         @id @default(cuid())
+  bookingId          String
+  booking            Booking        @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  paymentAttemptId   String
+  paymentAttempt     PaymentAttempt @relation(fields: [paymentAttemptId], references: [id], onDelete: Restrict)
+  driverId           String
+  driver             Driver         @relation(fields: [driverId], references: [id], onDelete: Restrict)
+  amountPaise        Int
+  status             RefundStatus   @default(requested)
+  reason             String
+  requestedByType    BookingActorType
+  requestedById      String
+  approvedById       String?
+  providerRefundId   String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  history            RefundStatusHistory[]
+
+  @@index([bookingId, createdAt])
+  @@index([driverId, createdAt])
+}
+
+model RefundStatusHistory {
+  id         String           @id @default(cuid())
+  refundId   String
+  refund     Refund           @relation(fields: [refundId], references: [id], onDelete: Cascade)
+  fromStatus RefundStatus?
+  toStatus   RefundStatus
+  actorType  BookingActorType
+  actorId    String?
+  reason     String?
+  createdAt  DateTime         @default(now())
+
+  @@index([refundId, createdAt])
+}
+
+model ChargePoint {
+  id                   String                         @id @default(cuid())
+  identity             String                         @unique
+  stationId            String
+  station              Station                        @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  evseId               String?
+  evse                 Evse?                          @relation(fields: [evseId], references: [id], onDelete: SetNull)
+  vendor               String?
+  model                String?
+  serialNumber         String?
+  firmwareVersion      String?
+  protocolVersion      OcppProtocolVersion
+  securityProfile      OcppSecurityProfile            @default(unconfigured)
+  endpointPath         String
+  commissioningState   ChargePointCommissioningState  @default(draft)
+  connectionStatus     ChargePointConnectionState     @default(disconnected)
+  lastHeartbeatAt      DateTime?
+  lastBootAt           DateTime?
+  lastMeterAt          DateTime?
+  lastFaultAt          DateTime?
+  lastFaultCode        String?
+  ownedByStaffId       String?
+  inventoryComplete    Boolean                        @default(false)
+  ocppCertifiedClaim   Boolean                        @default(false)
+  createdAt            DateTime                       @default(now())
+  updatedAt            DateTime                       @updatedAt
+  credentials          ChargePointCredential[]
+  capabilities         ChargerCapability[]
+  connections          ChargerConnection[]
+  protocolEvents       OcppProtocolEvent[]
+  messageAudits        OcppMessageAudit[]
+  faults               ChargerFault[]
+  remoteCommands       RemoteCommand[]
+  chargingSessions     ChargingSession[]
+  connectorMaps        ChargePointConnector[]
+  healthAlerts         DeviceHealthAlert[]
+  incidents            Incident[]
+  commandApprovals     CommandApproval[]
+
+  @@index([stationId, commissioningState])
+  @@index([protocolVersion, connectionStatus])
+}
+
+model ChargePointConnector {
+  id              String      @id @default(cuid())
+  chargePointId   String
+  chargePoint     ChargePoint @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  connectorId     String
+  connector       Connector   @relation(fields: [connectorId], references: [id], onDelete: Restrict)
+  ocppConnectorId Int
+
+  @@unique([chargePointId, ocppConnectorId])
+  @@unique([connectorId])
+}
+
+model ChargePointCredential {
+  id               String      @id @default(cuid())
+  chargePointId    String
+  chargePoint      ChargePoint @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  secretHash       String
+  secretKid        String?
+  certificateRef   String?
+  rotatedAt        DateTime?
+  createdAt        DateTime    @default(now())
+
+  @@index([chargePointId])
+}
+
+model ChargerCapability {
+  id            String      @id @default(cuid())
+  chargePointId String
+  chargePoint   ChargePoint @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  code          String
+  enabled       Boolean     @default(false)
+  notes         String?
+
+  @@unique([chargePointId, code])
+}
+
+model ChargerConnection {
+  id              String                     @id @default(cuid())
+  chargePointId   String
+  chargePoint     ChargePoint                @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  state           ChargePointConnectionState
+  reason          String?
+  remoteAddressHash String?
+  connectedAt     DateTime?
+  disconnectedAt  DateTime?
+  createdAt       DateTime                   @default(now())
+
+  @@index([chargePointId, createdAt])
+}
+
+model OcppProtocolEvent {
+  id              String           @id @default(cuid())
+  chargePointId   String
+  chargePoint     ChargePoint      @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  correlationId   String
+  protocolVersion OcppProtocolVersion
+  uniqueId        String
+  action          String
+  direction       String
+  parseResult     OcppParseResult
+  payloadHash     String
+  redactedPayload Json?
+  receivedAt      DateTime         @default(now())
+  processedAt     DateTime?
+  relatedSessionId String?
+
+  @@unique([chargePointId, uniqueId, direction])
+  @@index([chargePointId, receivedAt])
+  @@index([correlationId])
+}
+
+model OcppMessageAudit {
+  id              String      @id @default(cuid())
+  chargePointId   String
+  chargePoint     ChargePoint @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  uniqueId        String
+  action          String
+  commandId       String?
+  result          String?
+  errorCode       String?
+  createdAt       DateTime    @default(now())
+
+  @@index([chargePointId, createdAt])
+  @@index([commandId])
+}
+
+model ChargerFault {
+  id            String      @id @default(cuid())
+  chargePointId String
+  chargePoint   ChargePoint @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  connectorId   String?
+  code          String
+  vendorError   String?
+  info          String?
+  occurredAt    DateTime
+  clearedAt     DateTime?
+  createdAt     DateTime    @default(now())
+
+  @@index([chargePointId, occurredAt])
+}
+
+model RemoteCommand {
+  id              String               @id @default(cuid())
+  publicRef       String               @unique @default(cuid())
+  idempotencyKey  String               @unique
+  type            RemoteCommandType
+  status          RemoteCommandStatus  @default(queued)
+  actorType       BookingActorType
+  actorId         String
+  driverId        String?
+  driver          Driver?              @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  chargePointId   String
+  chargePoint     ChargePoint          @relation(fields: [chargePointId], references: [id], onDelete: Restrict)
+  stationId       String
+  connectorId     String
+  sessionId       String?
+  session         ChargingSession?     @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  reason          String
+  requestedAt     DateTime             @default(now())
+  dispatchedAt    DateTime?
+  respondedAt     DateTime?
+  protocolResponse String?
+  timeoutAt       DateTime?
+  evidenceState   String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  attempts        RemoteCommandAttempt[]
+  commandApprovals CommandApproval[]
+
+  @@index([chargePointId, createdAt])
+  @@index([driverId, createdAt])
+  @@index([sessionId])
+}
+
+model RemoteCommandAttempt {
+  id           String        @id @default(cuid())
+  commandId    String
+  command      RemoteCommand @relation(fields: [commandId], references: [id], onDelete: Cascade)
+  attemptedAt  DateTime      @default(now())
+  result       String
+  note         String?
+
+  @@index([commandId, attemptedAt])
+}
+
+model ChargingSession {
+  id                 String                 @id @default(cuid())
+  publicRef          String                 @unique @default(cuid())
+  status             ChargingSessionStatus  @default(requested)
+  driverId           String
+  driver             Driver                 @relation(fields: [driverId], references: [id], onDelete: Restrict)
+  stationId          String
+  station            Station                @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  connectorId        String
+  connector          Connector              @relation(fields: [connectorId], references: [id], onDelete: Restrict)
+  chargePointId      String
+  chargePoint        ChargePoint            @relation(fields: [chargePointId], references: [id], onDelete: Restrict)
+  bookingId          String?
+  booking            Booking?               @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  ocppTransactionId  String?
+  idTagHash          String?
+  startedAt          DateTime?
+  endedAt            DateTime?
+  lastEvidenceAt     DateTime?
+  energyMilliWh      BigInt?
+  meterUnit          String?
+  failReason         String?
+  supportReference   String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  events             ChargingSessionEvent[]
+  meterValues        MeterValue[]
+  authorizations     SessionAuthorization[]
+  commands           RemoteCommand[]
+  supportIssues      SupportIssue[]
+  incidents          Incident[]
+
+  @@index([driverId, createdAt])
+  @@index([connectorId, status])
+  @@index([chargePointId, ocppTransactionId])
+}
+
+model ChargingSessionEvent {
+  id         String                @id @default(cuid())
+  sessionId  String
+  session    ChargingSession       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  fromStatus ChargingSessionStatus?
+  toStatus   ChargingSessionStatus
+  source     String
+  note       String?
+  createdAt  DateTime              @default(now())
+
+  @@index([sessionId, createdAt])
+}
+
+model MeterValue {
+  id              String           @id @default(cuid())
+  sessionId       String?
+  session         ChargingSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  chargePointId   String
+  connectorId     String?
+  sampledAt       DateTime
+  receivedAt      DateTime         @default(now())
+  rawValue        String
+  rawUnit         String
+  measurand       String
+  context         String?
+  source          String
+  energyMilliWh   BigInt?
+  createdAt       DateTime         @default(now())
+
+  @@index([sessionId, sampledAt])
+  @@index([chargePointId, sampledAt])
+}
+
+model SessionAuthorization {
+  id            String           @id @default(cuid())
+  sessionId     String?
+  session       ChargingSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  driverId      String?
+  driver        Driver?          @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  idTagHash     String
+  status        String
+  expiresAt     DateTime?
+  createdAt     DateTime         @default(now())
+
+  @@index([idTagHash])
+  @@index([sessionId])
+}
+
+model ConnectorStatusSnapshot {
+  id              String   @id @default(cuid())
+  connectorId     String
+  connector       Connector @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+  publicStatus    String
+  internalStatus  String
+  source          String
+  statusUpdatedAt DateTime
+  heartbeatAt     DateTime?
+  createdAt       DateTime @default(now())
+
+  @@index([connectorId, createdAt])
+}
+
+model DeviceHealthAlert {
+  id            String               @id @default(cuid())
+  chargePointId String
+  chargePoint   ChargePoint          @relation(fields: [chargePointId], references: [id], onDelete: Cascade)
+  severity      DeviceHealthSeverity
+  code          String
+  message       String
+  resolvedAt    DateTime?
+  createdAt     DateTime             @default(now())
+
+  @@index([chargePointId, createdAt])
+}
+
+// --- Phase 10 operations portals (staff / technician / host / fleet) ---
+
+model StaffMembership {
+  id             String       @id @default(cuid())
+  actorId        String
+  role           StaffRole
+  organisationId String?
+  organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: SetNull)
+  active         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([actorId, active])
+  @@index([organisationId])
+  @@unique([actorId, role, organisationId])
+}
+
+model HostMembership {
+  id        String   @id @default(cuid())
+  actorId   String
+  hostId    String
+  host      Host     @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  role      StaffRole
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([actorId, hostId])
+  @@index([hostId, active])
+  @@index([actorId, active])
+}
+
+model FleetOrganisation {
+  id             String        @id @default(cuid())
+  organisationId String?
+  organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: SetNull)
+  name           String
+  legalName      String?
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  memberships    FleetMembership[]
+  costCentres    CostCentre[]
+  driverRefs     FleetDriverRef[]
+  vehicles       FleetVehicleRef[]
+
+  @@index([organisationId])
+}
+
+model FleetMembership {
+  id                  String            @id @default(cuid())
+  actorId             String
+  fleetOrganisationId String
+  fleetOrganisation   FleetOrganisation @relation(fields: [fleetOrganisationId], references: [id], onDelete: Cascade)
+  role                StaffRole
+  active              Boolean           @default(true)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@unique([actorId, fleetOrganisationId])
+  @@index([fleetOrganisationId, active])
+  @@index([actorId, active])
+}
+
+model CostCentre {
+  id                  String            @id @default(cuid())
+  fleetOrganisationId String
+  fleetOrganisation   FleetOrganisation @relation(fields: [fleetOrganisationId], references: [id], onDelete: Cascade)
+  code                String
+  name                String
+  createdAt           DateTime          @default(now())
+
+  @@unique([fleetOrganisationId, code])
+}
+
+model FleetDriverRef {
+  id                  String            @id @default(cuid())
+  fleetOrganisationId String
+  fleetOrganisation   FleetOrganisation @relation(fields: [fleetOrganisationId], references: [id], onDelete: Cascade)
+  driverId            String?
+  driver              Driver?           @relation(fields: [driverId], references: [id], onDelete: SetNull)
+  label               String
+  costCentreId        String?
+  approved            Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+
+  @@index([fleetOrganisationId])
+  @@index([driverId])
+}
+
+model FleetVehicleRef {
+  id                  String            @id @default(cuid())
+  fleetOrganisationId String
+  fleetOrganisation   FleetOrganisation @relation(fields: [fleetOrganisationId], references: [id], onDelete: Cascade)
+  label               String
+  connectorType       String?
+  createdAt           DateTime          @default(now())
+
+  @@index([fleetOrganisationId])
+}
+
+model StationAssignment {
+  id        String    @id @default(cuid())
+  actorId   String
+  stationId String
+  station   Station   @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  role      StaffRole
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([actorId, stationId, role])
+  @@index([stationId, active])
+  @@index([actorId, active])
+}
+
+model Incident {
+  id                    String           @id @default(cuid())
+  publicRef             String           @unique @default(cuid())
+  stationId             String
+  station               Station          @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  connectorId           String?
+  connector             Connector?       @relation(fields: [connectorId], references: [id], onDelete: SetNull)
+  chargePointId         String?
+  chargePoint           ChargePoint?     @relation(fields: [chargePointId], references: [id], onDelete: SetNull)
+  chargingSessionId     String?
+  chargingSession       ChargingSession? @relation(fields: [chargingSessionId], references: [id], onDelete: SetNull)
+  supportIssueId        String?
+  supportIssue          SupportIssue?    @relation(fields: [supportIssueId], references: [id], onDelete: SetNull)
+  severity              IncidentSeverity
+  status                IncidentStatus   @default(new)
+  title                 String
+  summary               String
+  customerVisibleStatus String?
+  assignedActorId       String?
+  assignedTechnicianId  String?
+  suggestedFrom         IncidentTrigger  @default(manual)
+  vendorEscalatedAt     DateTime?
+  resolvedAt            DateTime?
+  verifiedAt            DateTime?
+  closedAt              DateTime?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  events                IncidentEvent[]
+  workOrders            TechnicianWorkOrder[]
+
+  @@index([stationId, status])
+  @@index([status, severity])
+  @@index([assignedTechnicianId, status])
+  @@index([chargePointId, status])
+}
+
+model IncidentEvent {
+  id         String            @id @default(cuid())
+  incidentId String
+  incident   Incident          @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  fromStatus IncidentStatus?
+  toStatus   IncidentStatus?
+  actorId    String
+  actorRole  StaffRole
+  kind       IncidentEventKind
+  body       String?
+  customerVisible Boolean      @default(false)
+  createdAt  DateTime          @default(now())
+
+  @@index([incidentId, createdAt])
+}
+
+model TechnicianWorkOrder {
+  id              String          @id @default(cuid())
+  incidentId      String
+  incident        Incident        @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  stationId       String
+  station         Station         @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  assignedActorId String
+  status          WorkOrderStatus @default(queued)
+  startedAt       DateTime?
+  pausedAt        DateTime?
+  completedAt     DateTime?
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  checklist       MaintenanceChecklist[]
+  evidence        MaintenanceEvidence[]
+
+  @@index([assignedActorId, status])
+  @@index([stationId, status])
+  @@index([incidentId])
+}
+
+model MaintenanceChecklist {
+  id          String            @id @default(cuid())
+  workOrderId String
+  workOrder   TechnicianWorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  code        String
+  label       String
+  outcome     ChecklistOutcome?
+  sortOrder   Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([workOrderId, code])
+}
+
+model MaintenanceEvidence {
+  id          String              @id @default(cuid())
+  workOrderId String
+  workOrder   TechnicianWorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  storageUrl  String
+  altText     String
+  kind        String              @default("photo")
+  uploadedBy  String
+  createdAt   DateTime            @default(now())
+
+  @@index([workOrderId])
+}
+
+model CommandApproval {
+  id                 String                 @id @default(cuid())
+  publicRef          String                 @unique @default(cuid())
+  action             CommandApprovalAction
+  status             CommandApprovalStatus  @default(pending)
+  actorId            String
+  actorRole          StaffRole
+  approverId         String?
+  stationId          String
+  station            Station                @relation(fields: [stationId], references: [id], onDelete: Restrict)
+  connectorId        String?
+  sessionPublicRef   String?
+  chargePointId      String?
+  chargePoint        ChargePoint?           @relation(fields: [chargePointId], references: [id], onDelete: SetNull)
+  commandId          String?
+  remoteCommand      RemoteCommand?         @relation(fields: [commandId], references: [id], onDelete: SetNull)
+  reason             String
+  riskNote           String
+  mfaAssertion       Boolean                @default(false)
+  breakGlass         Boolean                @default(false)
+  breakGlassExpiresAt DateTime?
+  approvedAt         DateTime?
+  dispatchedAt       DateTime?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+
+  @@index([stationId, status])
+  @@index([status, createdAt])
+  @@index([commandId])
+}
+
+model SupportTicketAssignment {
+  id              String       @id @default(cuid())
+  supportIssueId  String
+  supportIssue    SupportIssue @relation(fields: [supportIssueId], references: [id], onDelete: Cascade)
+  assigneeActorId String
+  assignedById    String
+  createdAt       DateTime     @default(now())
+
+  @@index([supportIssueId, createdAt])
+  @@index([assigneeActorId])
+}
+
+model SupportIssueNote {
+  id             String       @id @default(cuid())
+  supportIssueId String
+  supportIssue   SupportIssue @relation(fields: [supportIssueId], references: [id], onDelete: Cascade)
+  actorId        String
+  customerVisible Boolean     @default(false)
+  body           String
+  createdAt      DateTime     @default(now())
+
+  @@index([supportIssueId, createdAt])
+}
+
+model ExportJob {
+  id          String          @id @default(cuid())
+  publicRef   String          @unique @default(cuid())
+  kind        ExportJobKind
+  status      ExportJobStatus @default(queued)
+  actorId     String
+  actorRole   StaffRole
+  filters     Json
+  csvContent  String?
+  fileRef     String?
+  rowCount    Int?
+  error       String?
+  requestedAt DateTime        @default(now())
+  generatedAt DateTime?
+  expiresAt   DateTime?
+  downloadCount Int           @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([actorId, createdAt])
+  @@index([status, expiresAt])
+}
+
+model FeatureFlagOverride {
+  id            String    @id @default(cuid())
+  flagKey       String    @unique
+  enabled       Boolean
+  reason        String
+  updatedById   String
+  updatedByRole StaffRole
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([updatedById, updatedAt])
+}

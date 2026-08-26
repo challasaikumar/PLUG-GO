@@ -1,0 +1,52 @@
+{
+  "name": "plug-and-go",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "secret-scan": "tsx scripts/secret-scan.ts",
+    "release:validate": "tsx scripts/validate-release-env.ts",
+    "backup-check": "tsx scripts/backup-check.ts",
+    "postinstall": "prisma generate",
+    "db:up": "sh scripts/dev-postgres.sh",
+    "db:down": "sh scripts/stop-dev-postgres.sh",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:seed": "ALLOW_DEMO_SEED=true prisma db seed",
+    "db:clear-demo": "tsx prisma/clear-demo.ts",
+    "csms:start": "tsx services/csms/src/index.ts",
+    "csms:simulator": "tsx services/csms/simulator/ocpp16-client.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "leaflet": "^1.9.4",
+    "next": "^16.3.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "^26.3.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@types/ws": "^8.18.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.2",
+    "prisma": "^6.19.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

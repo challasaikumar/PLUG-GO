@@ -1,0 +1,232 @@
+{
+  "$description": "Plug and Go Phase 1 design tokens. Semantic names only. Do not use one-off hex or px in UI. Light theme is canonical. No live station, price, or partner data is encoded here.",
+  "color": {
+    "ink": {
+      "road": { "value": "#333333", "description": "Deep ink / road. Primary text and header." },
+      "muted": { "value": "#575757", "description": "Secondary ink." }
+    },
+    "surface": {
+      "canvas": { "value": "#F7F7F7", "description": "Page background, light canvas." },
+      "default": { "value": "#FFFFFF", "description": "Raised paper: cards, sheets." },
+      "inset": { "value": "#F0F0F0", "description": "Wells, skeletons, disabled fills." },
+      "inverse": { "value": "#333333", "description": "Dark bands (header, footer overlay)." }
+    },
+    "action": {
+      "primary": { "value": "#EA1560", "description": "NIKOL magenta action." },
+      "primaryHover": { "value": "#C51250" },
+      "primaryActive": { "value": "#9F0E41" },
+      "primaryDisabled": { "value": "#F58FB2" },
+      "onPrimary": { "value": "#FAF7F2" },
+      "subtle": { "value": "#FDF2F6" },
+      "secondary": { "value": "#333333", "description": "Secondary solid (ink)." },
+      "secondaryHover": { "value": "#000000" },
+      "onSecondary": { "value": "#FAF7F2" },
+      "outlineBorder": { "value": "#333333" },
+      "destructive": { "value": "#B42318" },
+      "destructiveHover": { "value": "#8F1C14" },
+      "onDestructive": { "value": "#FAF7F2" }
+    },
+    "status": {
+      "available": { "value": "#1F6B3A", "label": "Available" },
+      "availableBg": { "value": "#E5F3EA" },
+      "limited": { "value": "#9A5B00", "label": "In use / Limited" },
+      "limitedBg": { "value": "#F8EDD9" },
+      "faulted": { "value": "#B42318", "label": "Faulted" },
+      "faultedBg": { "value": "#FBE7E5" },
+      "offline": { "value": "#4E5965", "label": "Offline / Unknown / Stale" },
+      "offlineBg": { "value": "#EEF0F2" }
+    },
+    "text": {
+      "primary": { "value": "#333333" },
+      "secondary": { "value": "#575757" },
+      "tertiary": { "value": "#6B6B6B" },
+      "inverse": { "value": "#FAF7F2" },
+      "disabled": { "value": "#9E9E9E" },
+      "link": { "value": "#9F0E41" },
+      "linkHover": { "value": "#7A0B32" }
+    },
+    "border": {
+      "default": { "value": "#DBDBDB" },
+      "strong": { "value": "#C2C2C2" },
+      "focus": { "value": "#0F5C8C" }
+    },
+    "focus": {
+      "ring": { "value": "#0F5C8C", "description": "Keyboard focus. Never status green." }
+    },
+    "success": {
+      "fg": { "value": "#1F6B3A" },
+      "bg": { "value": "#E5F3EA" }
+    },
+    "warning": {
+      "fg": { "value": "#5A4A0C" },
+      "bg": { "value": "#FCF7E3" }
+    },
+    "error": {
+      "fg": { "value": "#B42318" },
+      "bg": { "value": "#FBE7E5" },
+      "border": { "value": "#E8A8A2" }
+    }
+  },
+  "typography": {
+    "family": {
+      "sans": { "value": "system-ui, sans-serif", "description": "UI and body." },
+      "display": { "value": "-apple-system, BlinkMacSystemFont, sans-serif", "description": "Headings." },
+      "mono": { "value": "IBM Plex Mono, ui-monospace, monospace", "description": "kW, ₹, IDs, timestamps." }
+    },
+    "weight": {
+      "regular": { "value": 400 },
+      "medium": { "value": 500 },
+      "semibold": { "value": 600 }
+    },
+    "size": {
+      "caption": {
+        "mobile": { "fontSize": "12px", "lineHeight": "16px" },
+        "desktop": { "fontSize": "12px", "lineHeight": "16px" }
+      },
+      "small": {
+        "mobile": { "fontSize": "14px", "lineHeight": "20px" },
+        "desktop": { "fontSize": "14px", "lineHeight": "20px" }
+      },
+      "body": {
+        "mobile": { "fontSize": "16px", "lineHeight": "24px" },
+        "desktop": { "fontSize": "16px", "lineHeight": "26px" }
+      },
+      "bodyLg": {
+        "mobile": { "fontSize": "18px", "lineHeight": "28px" },
+        "desktop": { "fontSize": "18px", "lineHeight": "28px" }
+      },
+      "h3": {
+        "mobile": { "fontSize": "20px", "lineHeight": "28px" },
+        "desktop": { "fontSize": "24px", "lineHeight": "32px" }
+      },
+      "h2": {
+        "mobile": { "fontSize": "24px", "lineHeight": "32px" },
+        "desktop": { "fontSize": "32px", "lineHeight": "40px" }
+      },
+      "h1": {
+        "mobile": { "fontSize": "32px", "lineHeight": "40px" },
+        "desktop": { "fontSize": "40px", "lineHeight": "48px" }
+      },
+      "display": {
+        "mobile": { "fontSize": "36px", "lineHeight": "44px" },
+        "desktop": { "fontSize": "48px", "lineHeight": "56px" }
+      }
+    }
+  },
+  "spacing": {
+    "0": { "value": "0px" },
+    "1": { "value": "4px" },
+    "2": { "value": "8px" },
+    "3": { "value": "12px" },
+    "4": { "value": "16px" },
+    "5": { "value": "20px" },
+    "6": { "value": "24px" },
+    "8": { "value": "32px" },
+    "10": { "value": "40px" },
+    "12": { "value": "48px" },
+    "16": { "value": "64px" },
+    "20": { "value": "80px" },
+    "24": { "value": "96px" }
+  },
+  "breakpoint": {
+    "xs": { "value": "360px" },
+    "sm": { "value": "390px" },
+    "md": { "value": "768px" },
+    "lg": { "value": "1024px" },
+    "xl": { "value": "1280px" },
+    "xxl": { "value": "1440px" }
+  },
+  "layout": {
+    "container": {
+      "max": { "value": "1200px" },
+      "gutter": {
+        "mobile": { "value": "16px" },
+        "tablet": { "value": "24px" },
+        "desktop": { "value": "32px" }
+      },
+      "margin": {
+        "mobile": { "value": "16px" },
+        "tablet": { "value": "24px" },
+        "desktop": { "value": "32px" }
+      },
+      "columns": {
+        "mobile": { "value": 4 },
+        "tablet": { "value": 8 },
+        "desktop": { "value": 12 }
+      }
+    }
+  },
+  "radius": {
+    "none": { "value": "0px" },
+    "sm": { "value": "4px" },
+    "md": { "value": "8px" },
+    "card": { "value": "12px" },
+    "pill": { "value": "999px" }
+  },
+  "shadow": {
+    "none": { "value": "none" },
+    "sm": { "value": "0 1px 2px rgba(22, 32, 44, 0.06)" },
+    "md": { "value": "0 8px 24px rgba(22, 32, 44, 0.10)" },
+    "focus": { "value": "0 0 0 3px #0F5C8C" }
+  },
+  "border": {
+    "width": {
+      "default": { "value": "1px" },
+      "strong": { "value": "2px" }
+    },
+    "color": {
+      "default": { "value": "#D4CDBF" },
+      "strong": { "value": "#B8AFA0" }
+    }
+  },
+  "zIndex": {
+    "base": { "value": 0 },
+    "sticky": { "value": 100 },
+    "dropdown": { "value": 300 },
+    "drawer": { "value": 400 },
+    "overlay": { "value": 500 },
+    "modal": { "value": 600 },
+    "toast": { "value": 700 },
+    "focus": { "value": 800 }
+  },
+  "motion": {
+    "fast": { "value": "150ms" },
+    "base": { "value": "200ms" },
+    "slow": { "value": "300ms" },
+    "easing": {
+      "standard": { "value": "cubic-bezier(0.2, 0, 0, 1)" }
+    },
+    "reduced": {
+      "duration": { "value": "0ms" }
+    }
+  },
+  "size": {
+    "touch": {
+      "min": { "value": "44px" }
+    },
+    "button": {
+      "height": { "value": "48px" },
+      "heightSm": { "value": "44px" },
+      "paddingX": { "value": "20px" }
+    },
+    "input": {
+      "height": { "value": "48px" }
+    },
+    "chip": {
+      "height": { "value": "32px" }
+    },
+    "header": {
+      "heightMobile": { "value": "56px" },
+      "heightDesktop": { "value": "64px" }
+    },
+    "icon": {
+      "sm": { "value": "16px" },
+      "md": { "value": "20px" },
+      "lg": { "value": "24px" }
+    },
+    "marker": {
+      "default": { "value": "32px" },
+      "selected": { "value": "40px" }
+    }
+  }
+}

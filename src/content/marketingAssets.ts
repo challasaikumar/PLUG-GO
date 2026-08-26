@@ -1,0 +1,43 @@
+/** Public NIKOL visual assets. Decorative only — not a Plug and Go catalogue. */
+export const marketingAssets = {
+  heroVideo: "/nikolHome-IrVHCn3-.mp4",
+  heroPoster: "/nikol-ev.assets.Woblo/bg-4w2xffY1.png",
+  footerVideo: "/nikol-ev.assets.Woblo/Neuron_Animation-BdMMIzvu.mp4",
+  footerVideoPoster: "/nikol-ev.assets.Woblo/Neuron_Animation-poster.jpg",
+  cardFind: "/nikol-ev.assets.Woblo/cardImg1-CFrRQkc1.png",
+  cardHost: "/nikol-ev.assets.Woblo/cardImg2-CPs8JHUw.png",
+  cardFleets: "/nikol-ev.assets.Woblo/card4-DbwHSFkK.png",
+  missionBand: `/nikol-ev.assets.Woblo/${encodeURIComponent("Rectangle%2055-BqH0_IrM.png")}`,
+  glimpse: [
+    "/nikol-ev.assets.Woblo/0c602cf4-61db-4646-a0a0-3258d0391966",
+    "/nikol-ev.assets.Woblo/12ea708b-8f9e-4e56-8855-69e2994bcec6",
+    "/nikol-ev.assets.Woblo/198cbe74-a9f0-477f-b1bc-186c87332921",
+  ],
+  journey: {
+    find: "/journey/find.png",
+    arrive: "/journey/arrive.png",
+    charge: "/journey/charge.png",
+  },
+  journeyIcons: {
+    find: "/journey/icons/find.png",
+    arrive: "/journey/icons/arrive.png",
+    charge: "/journey/icons/charge.png",
+  },
+  productIcons: {
+    find: "/journey/icons/find.png",
+    arrive: "/journey/icons/arrive.png",
+    charge: "/journey/icons/charge.png",
+    charging_not_started: "/icons/3d/charging-not-started.png",
+    connector_issue: "/icons/3d/connector-issue.png",
+    payment_issue: "/icons/3d/payment-issue.png",
+    refund_billing: "/icons/3d/refund-billing.png",
+    unsafe_fault: "/icons/3d/unsafe-fault.png",
+    general_support: "/icons/3d/general-support.png",
+    check: "/icons/3d/check.png",
+    enquire: "/icons/3d/enquire.png",
+    qualify: "/icons/3d/qualify.png",
+    followup: "/icons/3d/followup.png",
+    inspect: "/icons/3d/inspect.png",
+    records: "/icons/3d/records.png",
+  },
+} as const;
