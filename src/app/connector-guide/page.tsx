@@ -24,6 +24,7 @@ export const metadata = pageMeta({
   title: connectorGuide.title,
   description: connectorGuide.description,
   path: "/connector-guide",
+  keywords: ["EV connector types", "CCS2", "Type 2", "DC fast charging"],
 });
 
 function currentKind(type: string): "AC" | "DC" | "Unclassified" {

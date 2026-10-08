@@ -17,6 +17,11 @@ describe("validateEnquiry", () => {
     expect(result.ok).toBe(true);
   });
 
+  it("accepts a contact enquiry without a phone number", () => {
+    const result = validateEnquiry({ ...validContact, phone: "" });
+    expect(result.ok).toBe(true);
+  });
+
   it("rejects a filled honeypot without sending semantics", () => {
     const result = validateEnquiry({ ...validContact, website: "https://spam.example" });
     expect(result.ok).toBe(false);

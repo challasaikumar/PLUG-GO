@@ -24,8 +24,9 @@ export function FooterNewsletter() {
 
   return (
     <form className="footer-news" onSubmit={onSubmit} noValidate>
-      <label htmlFor="footer-email">
-        Signup Our Newsletter
+      <p className="footer-news__lead">Join our newsletter for hub updates and offers.</p>
+      <label htmlFor="footer-email" className="footer-news__label">
+        Email
         <FieldRequired />
       </label>
       <div className="footer-news__row">
@@ -35,7 +36,7 @@ export function FooterNewsletter() {
           type="email"
           inputMode="email"
           autoComplete="email"
-          placeholder="Email"
+          placeholder="Enter your email"
           required
           maxLength={FIELD_LIMITS.email}
           value={email}
@@ -50,14 +51,20 @@ export function FooterNewsletter() {
             if (email.trim()) setError(validateEmail(email));
           }}
         />
-        <button type="submit">Send</button>
+        <button type="submit">Submit</button>
       </div>
       {error ? (
         <p className="field-error" id="footer-email-error" role="alert">
           {error}
         </p>
       ) : (
-        <p id="footer-email-help">Opens the contact form. A mailing list is not configured yet.</p>
+        <p id="footer-email-help" className="footer-news__help">
+          By subscribing, you agree to our{" "}
+          <a className="png-link" href="/legal/privacy">
+            Privacy Policy
+          </a>{" "}
+          and consent to receive updates from PLUG & GO.
+        </p>
       )}
     </form>
   );

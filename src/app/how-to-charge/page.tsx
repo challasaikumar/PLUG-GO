@@ -19,6 +19,7 @@ export const metadata = pageMeta({
   title: howToCharge.title,
   description: howToCharge.description,
   path: "/how-to-charge",
+  keywords: ["how to charge an EV", "EV charging steps", "PLUG & GO"],
 });
 
 export default function HowToChargePage() {

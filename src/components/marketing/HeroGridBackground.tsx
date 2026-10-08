@@ -27,7 +27,7 @@ function resetParticle(particle: Particle, width: number, height: number, initia
   particle.cardWidth = 8 + Math.random() * 12;
   particle.cardHeight = 16 + Math.random() * 20;
   particle.angle = Math.atan2(particle.y, particle.x) + (Math.random() - 0.5) * 0.2;
-  particle.color = Math.random() > 0.4 ? "rgba(125, 207, 182," : "rgba(70, 130, 120,";
+  particle.color = Math.random() > 0.4 ? "rgba(0, 143, 75," : "rgba(8, 94, 52,";
 }
 
 function createParticle(width: number, height: number): Particle {
@@ -39,7 +39,7 @@ function createParticle(width: number, height: number): Particle {
     cardWidth: 0,
     cardHeight: 0,
     angle: 0,
-    color: "rgba(125, 207, 182,",
+    color: "rgba(0, 143, 75,",
   };
   resetParticle(particle, width, height, true);
   return particle;
@@ -92,7 +92,7 @@ export function HeroGridBackground() {
     }
 
     function draw() {
-      ctx.fillStyle = "#05080c";
+      ctx.fillStyle = "#f0fef8";
       ctx.fillRect(0, 0, cssWidth, cssHeight);
 
       for (const particle of particles) {
@@ -120,7 +120,7 @@ export function HeroGridBackground() {
           ctx.save();
           ctx.translate(screenX, screenY);
           ctx.rotate(particle.angle);
-          ctx.fillStyle = `rgba(164, 219, 203, ${alpha * 0.85})`;
+          ctx.fillStyle = `rgba(0, 173, 90, ${alpha * 0.55})`;
           ctx.fillRect(-w / 2, -h / 2, w, h);
           ctx.restore();
         } else {

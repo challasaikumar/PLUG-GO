@@ -35,7 +35,7 @@ describe("performance budget guards", () => {
     const locationMap = read("src/components/maps/LocationMap.tsx");
     const home = read("src/app/page.tsx");
     expect(contactPage).not.toMatch(/mapbox-gl|maps\.googleapis/);
-    expect(home).toMatch(/CoverageBand/);
+    expect(home).toMatch(/VoltranHome/);
     expect(home).not.toMatch(/mapbox-gl|maps\.googleapis/);
     expect(locationMap).toMatch(/next\/dynamic/);
     expect(locationMap).toMatch(/ssr:\s*false/);

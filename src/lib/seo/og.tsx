@@ -46,7 +46,7 @@ export function ogImageResponse(input: {
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ fontSize: 28, fontWeight: 600 }}>Plug and Go</div>
+          <div style={{ fontSize: 28, fontWeight: 600 }}>PLUG & GO</div>
           <div style={{ fontSize: 22, color: "#575757", maxWidth: 640, textAlign: "right" }}>{fact}</div>
         </div>
       </div>

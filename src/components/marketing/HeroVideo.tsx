@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { HeroGridBackground } from "@/components/marketing/HeroGridBackground";
 import { marketingAssets } from "@/content/marketingAssets";
 
 export function HeroVideo({ children }: { children: ReactNode }) {
@@ -29,7 +28,6 @@ export function HeroVideo({ children }: { children: ReactNode }) {
 
   return (
     <section className="home-hero" aria-label="Introduction">
-      <HeroGridBackground />
       <div className="home-hero__intro">{children}</div>
       <div className="home-hero__stage">
         <Image

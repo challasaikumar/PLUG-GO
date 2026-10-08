@@ -5,6 +5,15 @@ import { allSecurityHeaders } from "./src/lib/release/headers";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   serverExternalPackages: ["@prisma/client"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "voltran-space.blr1.digitaloceanspaces.com",
+        pathname: "/**",
+      },
+    ],
+  },
   turbopack: {
     root: path.resolve(process.cwd()),
   },

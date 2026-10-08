@@ -156,8 +156,15 @@ export function validateEnquiry(raw: unknown): EnquiryValidation {
   const emailError = validateEmail(value.email);
   if (emailError) errors.email = emailError;
 
-  const phoneError = validateIndianMobile(value.phone);
-  if (phoneError) errors.phone = phoneError;
+  if (kind === "contact") {
+    if (value.phone) {
+      const phoneError = validateIndianMobile(value.phone);
+      if (phoneError) errors.phone = phoneError;
+    }
+  } else {
+    const phoneError = validateIndianMobile(value.phone);
+    if (phoneError) errors.phone = phoneError;
+  }
 
   if (kind === "fleet" || kind === "workplace" || kind === "host") {
     const organisationError = validateOrganisation(value.organisation);

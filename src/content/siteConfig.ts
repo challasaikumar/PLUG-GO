@@ -1,13 +1,12 @@
 /**
- * Central Plug and Go site configuration.
+ * Central Voltran site configuration.
  * Empty strings / null mean “not published yet” — never invent values.
  * Runtime enablement is `src/lib/release/flags.ts`. The object below is not a feature switch.
  */
 
 export const siteConfig = {
-  name: "Plug and Go",
-  promise:
-    "Find a compatible charger. Know the price. Charge with confidence.",
+  name: "PLUG & GO",
+  promise: "Most reliable EV charging network in India",
   locale: "en-IN",
   featureFlags: {
     finderLive: false,
@@ -16,21 +15,22 @@ export const siteConfig = {
     accounts: false,
   },
   identity: {
-    legalEntity: null as string | null,
-    registeredAddress: null as string | null,
+    legalEntity: "PLUG & GO" as string | null,
+    registeredAddress: "7-50/1, 3rd Floor, GNR Heights, Ramavarappadu, Vijayawada, Andhra Pradesh - 521108" as
+      | string
+      | null,
     gstin: null as string | null,
-    brandTagline: "India-focused EV charging network",
+    brandTagline: "Hub Model, Multiple DC Fast Chargers, Manned, Open 24x7, Cafeteria & Clean Washroom Facility",
   },
   contact: {
-    supportEmail: null as string | null,
-    supportPhone: null as string | null,
-    supportHours: null as string | null,
+    supportEmail: "info@plugandgo.in" as string | null,
+    supportPhone: "+91 85559 66678" as string | null,
+    supportHours: "Open 24x7" as string | null,
     grievanceName: null as string | null,
     grievanceEmail: null as string | null,
     grievancePhone: null as string | null,
   },
   social: {
-    // Publish only when a real, approved profile exists.
     twitter: null as string | null,
     linkedin: null as string | null,
     instagram: null as string | null,
@@ -38,7 +38,6 @@ export const siteConfig = {
     youtube: null as string | null,
   },
   apps: {
-    // Publish only when a real Plug and Go listing exists. Do not invent store URLs.
     playStore: null as string | null,
     appStore: null as string | null,
   },
@@ -52,58 +51,47 @@ export const siteConfig = {
 
 export const navigation = {
   primary: [
-    { href: "/find-charger", label: "Find a charger" },
-    { href: "/about", label: "About" },
-    { href: "/pricing", label: "Pricing" },
-    { href: "/host-a-charger", label: "Host a charger" },
-    { href: "/support", label: "Support" },
+    { href: "/", label: "Home" },
+    { href: "/#team", label: "Team" },
+    { href: "/#app", label: "Mobile App" },
+    { href: "/#locations", label: "Locations" },
+    { href: "/gallery", label: "Gallery" },
+    { href: "/blogs", label: "Blogs" },
     { href: "/contact", label: "Contact" },
   ],
   solutions: [
-    { href: "/solutions/fleets", label: "Fleets" },
-    { href: "/solutions/workplace", label: "Workplace" },
-    { href: "/host-a-charger", label: "Host a charger" },
+    { href: "/#locations", label: "Locations" },
+    { href: "/contact", label: "Contact" },
   ],
   help: [
-    { href: "/how-to-charge", label: "How to charge" },
-    { href: "/support", label: "Support" },
-    { href: "/safety", label: "Safety" },
+    { href: "/gallery", label: "Gallery" },
+    { href: "/blogs", label: "Blogs" },
     { href: "/contact", label: "Contact" },
   ],
   footer: {
     drivers: [
-      { href: "/find-charger", label: "Find a charger" },
-      { href: "/how-to-charge", label: "How to charge" },
-      { href: "/connector-guide", label: "Connector guide" },
-      { href: "/pricing", label: "Pricing" },
-      { href: "/insights", label: "Insights" },
-      { href: "/support", label: "Support" },
-      { href: "/safety", label: "Safety" },
-      { href: "/account", label: "Account" },
-    ],
-    company: [
-      { href: "/about", label: "About Us" },
-      { href: "/host-a-charger", label: "Host a charger" },
-      { href: "/solutions/fleets", label: "Fleets" },
-      { href: "/solutions/workplace", label: "Workplace" },
-      { href: "/find-charger", label: "Locate charger" },
-      { href: "/pricing", label: "Pricing" },
+      { href: "/#locations", label: "Locations" },
+      { href: "/gallery", label: "Gallery" },
+      { href: "/#app", label: "Mobile App" },
+      { href: "/blogs", label: "Blogs" },
       { href: "/contact", label: "Contact" },
     ],
+    company: [
+      { href: "/#team", label: "Team" },
+      { href: "/#app", label: "Mobile App" },
+      { href: "/#locations", label: "Locations" },
+      { href: "/gallery", label: "Gallery" },
+      { href: "/blogs", label: "Blogs" },
+      { href: "/contact", label: "Contact Us" },
+    ],
     support: [
-      { href: "/how-to-charge", label: "How to charge" },
-      { href: "/support", label: "Support" },
-      { href: "/safety", label: "Safety" },
-      { href: "/insights", label: "Insights" },
       { href: "/contact", label: "Contact us" },
+      { href: "/legal/privacy", label: "Privacy Policy" },
+      { href: "/legal/terms", label: "Terms and Conditions" },
     ],
     legal: [
-      { href: "/legal/privacy", label: "Privacy" },
-      { href: "/account/privacy", label: "Privacy centre" },
-      { href: "/legal/terms", label: "Terms" },
-      { href: "/legal/refunds", label: "Refunds" },
-      { href: "/legal/grievance", label: "Grievance" },
-      { href: "/legal/accessibility", label: "Accessibility" },
+      { href: "/legal/privacy", label: "Privacy Policy" },
+      { href: "/legal/terms", label: "Terms and Conditions" },
     ],
   },
 } as const;
@@ -114,6 +102,8 @@ export const publicRoutes = [
   "/how-to-charge",
   "/connector-guide",
   "/insights",
+  "/blogs",
+  "/gallery",
   "/about",
   "/contact",
   "/support",

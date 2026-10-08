@@ -19,6 +19,7 @@ export const SECURITY_HEADER_LIST: Array<{ key: string; value: string }> = [
       "default-src 'self'",
       "base-uri 'self'",
       "form-action 'self'",
+      "frame-src 'self' https://www.google.com https://maps.google.com https://www.google.co.in",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "img-src 'self' data: blob: https:",

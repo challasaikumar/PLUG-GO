@@ -1,13 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { homeFaqs } from "@/content/answers";
 import { canonicalUrl } from "@/lib/env";
 import { isSitemapEligiblePath, staticPublicSitemapEntries, toMetadataSitemap } from "./sitemap-entries";
 import {
   articleJsonLd,
   breadcrumbListJsonLd,
+  chargingHubsJsonLd,
   containsReviewSchema,
   faqPageJsonLd,
+  homeDiscoveryJsonLd,
   organizationJsonLd,
+  siteGraphJsonLd,
 } from "./jsonld";
+import { llmsTxt } from "./llms";
 import { stationJsonLd } from "./station-jsonld";
 import robots from "@/app/robots";
 
@@ -64,9 +69,15 @@ describe("structured data", () => {
   it("builds Organization JSON-LD from configuration only, without reviews", () => {
     const org = organizationJsonLd() as Record<string, unknown>;
     expect(org["@type"]).toBe("Organization");
-    expect(org.name).toBe("Plug and Go");
-    expect(org.telephone).toBeUndefined();
+    expect(org.name).toBe("PLUG & GO");
+    expect(org.telephone).toBe("+91 85559 66678");
+    expect(org.email).toBe("info@plugandgo.in");
+    const address = org.address as Record<string, unknown>;
+    expect(address.addressLocality).toBe("Vijayawada");
+    expect(address.addressRegion).toBe("Andhra Pradesh");
+    expect(JSON.stringify(org.areaServed)).toContain("Telangana");
     expect(containsReviewSchema(org)).toBe(false);
+    expect(containsReviewSchema(siteGraphJsonLd())).toBe(false);
   });
 
   it("emits FAQPage schema only when the same FAQs are present", () => {
@@ -107,5 +118,54 @@ describe("structured data", () => {
     });
     expect(JSON.stringify(station)).toContain("ElectricVehicleChargingStation");
     expect(containsReviewSchema(station)).toBe(false);
+  });
+
+  it("describes published Rajahmundry hubs for local search without review stars", () => {
+    const hubs = chargingHubsJsonLd();
+    expect(hubs).toHaveLength(2);
+    expect(JSON.stringify(hubs)).toContain("ElectricVehicleChargingStation");
+    expect(JSON.stringify(hubs)).toContain("Rajahmundry");
+    expect(containsReviewSchema(hubs)).toBe(false);
+  });
+
+  it("keeps homepage FAQ schema aligned with visible answers", () => {
+    const schema = faqPageJsonLd([...homeFaqs]);
+    expect(schema?.mainEntity).toHaveLength(homeFaqs.length);
+    expect(schema?.mainEntity?.[0]).toMatchObject({
+      "@type": "Question",
+      name: homeFaqs[0].question,
+    });
+    expect(JSON.stringify(homeFaqs)).not.toMatch(/Find a charger lists published/i);
+    const graph = homeDiscoveryJsonLd();
+    expect(containsReviewSchema(graph)).toBe(false);
+    expect(JSON.stringify(graph)).toContain("HowTo");
+    expect(JSON.stringify(graph)).toContain("FAQPage");
+  });
+});
+
+describe("answer engines", () => {
+  it("allows major AI crawlers while still blocking operations paths", () => {
+    const rules = robots();
+    const list = Array.isArray(rules.rules) ? rules.rules : [rules.rules];
+    const gpt = list.find((rule) => "userAgent" in rule && rule.userAgent === "GPTBot");
+    expect(gpt).toBeDefined();
+    expect(gpt && "allow" in gpt ? gpt.allow : "").toBe("/");
+    expect(gpt && "disallow" in gpt ? gpt.disallow : []).toEqual(expect.arrayContaining(["/admin", "/ops"]));
+  });
+
+  it("publishes llms.txt from site facts only", () => {
+    const text = llmsTxt();
+    expect(text).toContain("info@plugandgo.in");
+    expect(text).toContain("+91 85559 66678");
+    expect(text).toContain("Jio-bp");
+    expect(text).toContain("The public station finder is not live.");
+    expect(text).not.toContain("linkedin.com");
+  });
+
+  it("raises contact, gallery, and blogs sitemap priority", () => {
+    const entries = staticPublicSitemapEntries();
+    const contact = entries.find((entry) => entry.path === "/contact");
+    expect(contact?.priority).toBe(0.85);
+    expect(contact?.changeFrequency).toBe("weekly");
   });
 });

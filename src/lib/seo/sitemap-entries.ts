@@ -41,12 +41,23 @@ export function isSitemapEligiblePath(path: string): boolean {
   return !DISALLOWED_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 }
 
+function sitemapCadence(path: string): Pick<SitemapPathEntry, "changeFrequency" | "priority"> {
+  if (path === "/") return { changeFrequency: "weekly", priority: 1 };
+  if (path === "/find-charger") return { changeFrequency: "daily", priority: 0.9 };
+  if (path === "/contact" || path === "/gallery" || path === "/blogs") {
+    return { changeFrequency: "weekly", priority: 0.85 };
+  }
+  if (path === "/how-to-charge" || path === "/connector-guide") {
+    return { changeFrequency: "monthly", priority: 0.8 };
+  }
+  return { changeFrequency: "monthly", priority: 0.7 };
+}
+
 export function staticPublicSitemapEntries(now = new Date()): SitemapPathEntry[] {
   return publicRoutes.filter(isSitemapEligiblePath).map((path) => ({
     path,
     lastModified: now,
-    changeFrequency: path === "/" ? "weekly" : path === "/find-charger" ? "daily" : "monthly",
-    priority: path === "/" ? 1 : path === "/find-charger" ? 0.9 : 0.7,
+    ...sitemapCadence(path),
   }));
 }
 
