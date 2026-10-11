@@ -5,19 +5,19 @@ export const homeFaqs = [
     id: "where",
     question: "Where can I charge with PLUG & GO?",
     answer:
-      "Published charge hubs include Jio-bp and Tata Power Charging Station in Rajahmundry, Andhra Pradesh. PLUG & GO is setting up EV charge hubs across highways and cities. Hubs are manned and open 24x7.",
+      "Published charge hubs include PLUG & GO EV CHARGING STATION in Andhra Pradesh. PLUG & GO is setting up EV charge hubs across highways and cities. Hubs are manned and open 24x7.",
   },
   {
     id: "facilities",
     question: "What facilities are at a PLUG & GO charge hub?",
     answer:
-      "Hubs use a hub model with multiple DC fast chargers, are manned and open 24x7, and include cafeteria and clean washroom facilities. Published amenities at Rajahmundry hubs include parking.",
+      "Hubs use a hub model with multiple DC fast chargers, are manned and open 24x7, and include cafeteria and clean washroom facilities.",
   },
   {
     id: "contact",
     question: "How do I contact PLUG & GO?",
     answer:
-      "Call +91 85559 66678 or email info@plugandgo.in. The registered office is 7-50/1, 3rd Floor, GNR Heights, Ramavarappadu, Vijayawada, Andhra Pradesh - 521108. A Hyderabad office is at Aruna Towers, Somajiguda. Support hours are open 24x7.",
+      "Call +91 85559 66678 or email info@plugandgo.in. The registered office is D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230. Support hours are open 24x7.",
   },
   {
     id: "app",

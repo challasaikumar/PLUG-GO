@@ -18,7 +18,7 @@ export const metadata = pageMeta({
   title: siteConfig.name,
   description: SITE_DESCRIPTION,
   path: "/",
-  keywords: ["Rajahmundry EV charging", "Jio-bp", "Tata Power Charging Station"],
+  keywords: ["PLUG & GO EV CHARGING STATION", "EV charging Andhra Pradesh"],
 });
 
 type PageProps = {

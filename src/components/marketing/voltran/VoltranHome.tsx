@@ -15,10 +15,6 @@ export function VoltranHome({
 }) {
   return (
     <div className="vt">
-      <section className="vt-section vt-team" id="team" aria-labelledby="team-heading">
-        <TeamStack />
-      </section>
-
       <section className="vt-section vt-app" id="app" aria-labelledby="app-heading">
         <div className="vt-wrap vt-wrap--wide">
           <SectionHead id="app-heading">How PLUG & GO Works</SectionHead>
@@ -34,10 +30,10 @@ export function VoltranHome({
             <div className="vt-how__stage">
               <Image
                 className="vt-how__device"
-                src="/nikol-ev.assets.Woblo/evimage.webp"
+                src="/nikol-ev.assets.Woblo/plug%26goIMage.png"
                 alt="PLUG & GO app showing charge hubs and live station availability"
-                width={1200}
-                height={1502}
+                width={718}
+                height={899}
                 sizes="(min-width: 960px) 400px, 80vw"
                 unoptimized
               />
@@ -50,6 +46,10 @@ export function VoltranHome({
         <div className="vt-wrap vt-wrap--wide">
           <LocationShowcase />
         </div>
+      </section>
+
+      <section className="vt-section vt-team" id="team" aria-labelledby="team-heading">
+        <TeamStack />
       </section>
 
       <section className="vt-section vt-contact" id="contact" aria-labelledby="contact-heading">

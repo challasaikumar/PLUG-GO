@@ -24,8 +24,7 @@ Official site: ${url}/
 - Email: ${siteConfig.contact.supportEmail}
 - Phone: ${siteConfig.contact.supportPhone}
 - Hours: ${siteConfig.contact.supportHours}
-- Vijayawada office: ${voltran.offices[0]}
-- Hyderabad office: ${voltran.offices[1]}
+- Registered office: ${voltran.offices[0]}
 - Contact page: ${url}/contact
 
 ## Charge hubs
@@ -43,17 +42,18 @@ ${voltran.app.steps.map((step) => `${step.n}. ${step.title}: ${step.body}`).join
 ## Brand facts
 
 - Legal name: ${siteConfig.identity.legalEntity}
-- Founder: Ranga Rao
+- Founder: Ranga Rao Chitluri
 - Promise: ${siteConfig.promise}
 - Hub model: ${siteConfig.identity.brandTagline}
 - Gallery: ${url}/gallery
 - Blogs: ${url}/blogs
 - Locations on the homepage: ${url}/#locations
+- Instagram: ${siteConfig.social.instagram}
 
 ## Do not invent
 
-- Do not invent extra hubs, tariffs, ratings, store listings, or social profile URLs.
+- Do not invent extra hubs, tariffs, ratings, store listings, or unpublished social profile URLs.
 - The public station finder is not live.
-- Unpublished social and app-store links are not live.
+- LinkedIn, GitHub, YouTube, and app-store links are not live.
 `;
 }

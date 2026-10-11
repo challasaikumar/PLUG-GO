@@ -32,21 +32,10 @@ function alwaysOpenHours() {
 export function registeredPostalAddress() {
   return {
     "@type": "PostalAddress",
-    streetAddress: "7-50/1, 3rd Floor, GNR Heights, Ramavarappadu",
-    addressLocality: "Vijayawada",
+    streetAddress: "D.No 8-18, Ramalayam Street",
+    addressLocality: "Mylavaram",
     addressRegion: "Andhra Pradesh",
-    postalCode: "521108",
-    addressCountry: "IN",
-  };
-}
-
-export function hyderabadPostalAddress() {
-  return {
-    "@type": "PostalAddress",
-    streetAddress: "#401, Aruna Towers, 6-3-661/10/1&2, Sangeeth Nagar, Somajiguda",
-    addressLocality: "Hyderabad",
-    addressRegion: "Telangana",
-    postalCode: "500082",
+    postalCode: "521230",
     addressCountry: "IN",
   };
 }
@@ -72,7 +61,7 @@ export function organizationJsonLd() {
     },
     founder: {
       "@type": "Person",
-      name: "Ranga Rao",
+      name: "Ranga Rao Chitluri",
       jobTitle: "Founder",
     },
     areaServed: [
@@ -92,7 +81,7 @@ export function organizationJsonLd() {
     organization.address = registeredPostalAddress();
     organization.location = {
       "@type": "Place",
-      name: "PLUG & GO Vijayawada",
+      name: "PLUG & GO Mylavaram",
       address: registeredPostalAddress(),
     };
   }
@@ -120,14 +109,6 @@ export function organizationJsonLd() {
   }
   organization.contactPoint = contactPoint;
   organization.openingHoursSpecification = alwaysOpenHours();
-  organization.subOrganization = [
-    {
-      "@type": "LocalBusiness",
-      name: "PLUG & GO Hyderabad",
-      address: hyderabadPostalAddress(),
-      parentOrganization: { "@id": orgId() },
-    },
-  ];
 
   const sameAs = [
     siteConfig.social.twitter,
@@ -265,15 +246,14 @@ export function chargingHubsJsonLd() {
       "@type": ["ElectricVehicleChargingStation", "LocalBusiness"],
       "@id": `${url}/#hub-${slug}`,
       name: hub.name,
-      description: `${hub.name} EV charging hub in ${hub.area}. Manned, open 24x7, with parking.`,
+      description: `${hub.name} EV charging hub in ${hub.area}. Manned and open 24x7.`,
       url: `${url}/`,
       hasMap: mapsUrl(hub.mapsQuery),
       address: {
         "@type": "PostalAddress",
-        streetAddress: hub.address,
+        streetAddress: hub.address || hub.name,
         addressLocality: hub.area,
         addressRegion: "Andhra Pradesh",
-        postalCode: "533101",
         addressCountry: "IN",
       },
       geo: {
@@ -350,7 +330,7 @@ export function contactPageJsonLd() {
     url,
     name: "Contact PLUG & GO",
     description:
-      "Call, email, or write to PLUG & GO. Offices in Vijayawada and Hyderabad. Support is open 24x7.",
+      "Call, email, or write to PLUG & GO. Registered office in Mylavaram, N.T.R district. Support is open 24x7.",
     inLanguage: "en-IN",
     isPartOf: { "@id": `${getSiteUrl()}/#website` },
     about: { "@id": orgId() },

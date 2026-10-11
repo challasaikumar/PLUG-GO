@@ -73,7 +73,7 @@ describe("structured data", () => {
     expect(org.telephone).toBe("+91 85559 66678");
     expect(org.email).toBe("info@plugandgo.in");
     const address = org.address as Record<string, unknown>;
-    expect(address.addressLocality).toBe("Vijayawada");
+    expect(address.addressLocality).toBe("Mylavaram");
     expect(address.addressRegion).toBe("Andhra Pradesh");
     expect(JSON.stringify(org.areaServed)).toContain("Telangana");
     expect(containsReviewSchema(org)).toBe(false);
@@ -120,11 +120,11 @@ describe("structured data", () => {
     expect(containsReviewSchema(station)).toBe(false);
   });
 
-  it("describes published Rajahmundry hubs for local search without review stars", () => {
+  it("describes published charge hubs for local search without review stars", () => {
     const hubs = chargingHubsJsonLd();
-    expect(hubs).toHaveLength(2);
+    expect(hubs).toHaveLength(1);
     expect(JSON.stringify(hubs)).toContain("ElectricVehicleChargingStation");
-    expect(JSON.stringify(hubs)).toContain("Rajahmundry");
+    expect(JSON.stringify(hubs)).toContain("PLUG & GO EV CHARGING STATION");
     expect(containsReviewSchema(hubs)).toBe(false);
   });
 
@@ -157,7 +157,7 @@ describe("answer engines", () => {
     const text = llmsTxt();
     expect(text).toContain("info@plugandgo.in");
     expect(text).toContain("+91 85559 66678");
-    expect(text).toContain("Jio-bp");
+    expect(text).toContain("PLUG & GO EV CHARGING STATION");
     expect(text).toContain("The public station finder is not live.");
     expect(text).not.toContain("linkedin.com");
   });

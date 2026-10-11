@@ -23,10 +23,10 @@ export function TeamStack() {
 
       {reduceMotion ? (
         <ul className="vt-team-static">
-          {people.map((person) => (
+          {people.map((person, index) => (
             <li key={person.name}>
-              <article className="vt-team-card">
-                <TeamCardBody person={person} />
+              <article className={cardClass(person)}>
+                <TeamCardBody person={person} index={index} />
               </article>
             </li>
           ))}
@@ -76,46 +76,44 @@ function TeamCard({
   return (
     <div ref={pin} className="vt-team-pin" style={{ zIndex: index + 1 }}>
       <motion.article
-        className="vt-team-card"
+        className={cardClass(person)}
         style={{
           scale,
           top: `calc(-5vh + ${index * 25}px)`,
         }}
       >
-        <TeamCardBody person={person} imageScale={imageScale} />
+        <TeamCardBody person={person} index={index} imageScale={imageScale} />
       </motion.article>
     </div>
   );
 }
 
+function cardClass(person: Person) {
+  return person.role === "FOUNDER" ? "vt-team-card is-founder" : "vt-team-card";
+}
+
 function TeamCardBody({
   person,
+  index,
   imageScale,
 }: {
   person: Person;
+  index: number;
   imageScale?: MotionValue<number>;
 }) {
-  const photo = person.image ? (
+  const photo = (
     <Image
       fill
       src={person.image}
       alt={person.name}
       sizes="(min-width: 768px) 420px, 80vw"
       className="vt-team-photo__img"
+      unoptimized
     />
-  ) : (
-    <div className="vt-team-photo__empty" aria-hidden="true">
-      <span>{person.initials}</span>
-    </div>
   );
 
   return (
     <>
-      <div className="vt-team-copy">
-        <p className="vt-team-role">{person.role}</p>
-        <h3>{person.name}</h3>
-        <p className="vt-team-bio">{person.bio}</p>
-      </div>
       <div className="vt-team-frame">
         {imageScale ? (
           <motion.div className="vt-team-media" style={{ scale: imageScale }}>
@@ -124,6 +122,14 @@ function TeamCardBody({
         ) : (
           <div className="vt-team-photo">{photo}</div>
         )}
+      </div>
+      <div className="vt-team-copy">
+        <div className="vt-team-copy__top">
+          <p className="vt-team-role">{person.role}</p>
+          <span className="vt-team-no">{String(index + 1).padStart(2, "0")}</span>
+        </div>
+        <h3>{person.name}</h3>
+        <p className="vt-team-bio">{person.bio}</p>
       </div>
     </>
   );

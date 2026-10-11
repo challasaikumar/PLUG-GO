@@ -45,13 +45,14 @@ export function ContactDesk({
         <div className="vt-contact-map">
           <div className="vt-contact-map__frame">
             <iframe
-              title="PLUG & GO Hyderabad office"
+              title="PLUG & GO office — opening soon"
               src={voltran.officeEmbedUrl}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen
             />
           </div>
+          <p className="vt-contact-map__soon">Opening soon</p>
         </div>
 
         <div className="vt-contact-reach">

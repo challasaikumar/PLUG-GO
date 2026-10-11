@@ -6,24 +6,93 @@ import { marketingAssets } from "@/content/marketingAssets";
 
 export function HeroVideo({ children }: { children: ReactNode }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const [needsTap, setNeedsTap] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => {
-      const reduced = media.matches;
-      setReduceMotion(reduced);
-      const video = videoRef.current;
-      if (!video) return;
-      if (reduced) {
-        video.pause();
+    const video = videoRef.current;
+    if (!video) return;
+
+    const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function arm(el: HTMLVideoElement) {
+      el.defaultMuted = true;
+      el.muted = true;
+      el.loop = true;
+      el.playsInline = true;
+      el.setAttribute("playsinline", "");
+      el.setAttribute("webkit-playsinline", "");
+      el.setAttribute("x5-playsinline", "");
+      el.setAttribute("autoplay", "");
+    }
+
+    async function tryPlay() {
+      if (!video || reduced()) {
+        video?.pause();
         return;
       }
-      void video.play().catch(() => undefined);
+      arm(video);
+      if (video.readyState < 1) {
+        video.load();
+      }
+      try {
+        await video.play();
+        setNeedsTap(false);
+        return true;
+      } catch {
+        setNeedsTap(true);
+        return false;
+      }
+    }
+
+    if (reduced()) {
+      video.pause();
+      return;
+    }
+
+    arm(video);
+    void tryPlay();
+
+    const onReady = () => {
+      void tryPlay();
     };
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
+    video.addEventListener("loadeddata", onReady);
+    video.addEventListener("canplay", onReady);
+    video.addEventListener("playing", () => setNeedsTap(false));
+
+    let tries = 0;
+    const retry = window.setInterval(() => {
+      if (!video.paused && !video.ended) {
+        window.clearInterval(retry);
+        return;
+      }
+      tries += 1;
+      void tryPlay();
+      if (tries >= 12) window.clearInterval(retry);
+    }, 400);
+
+    function unlock() {
+      void tryPlay();
+    }
+    document.addEventListener("pointerdown", unlock, { once: true, passive: true });
+    document.addEventListener("touchstart", unlock, { once: true, passive: true });
+    document.addEventListener("keydown", unlock, { once: true });
+
+    function onVisible() {
+      if (document.visibilityState === "visible") void tryPlay();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("pageshow", onVisible);
+
+    return () => {
+      window.clearInterval(retry);
+      video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("canplay", onReady);
+      document.removeEventListener("pointerdown", unlock);
+      document.removeEventListener("touchstart", unlock);
+      document.removeEventListener("keydown", unlock);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("pageshow", onVisible);
+    };
   }, []);
 
   return (
@@ -39,20 +108,36 @@ export function HeroVideo({ children }: { children: ReactNode }) {
           priority
           unoptimized
         />
-        {reduceMotion ? null : (
-          <video
-            ref={videoRef}
-            className="home-hero__video"
-            muted
-            playsInline
-            loop
-            preload="metadata"
-            poster={marketingAssets.heroPoster}
-            aria-hidden="true"
+        <video
+          ref={videoRef}
+          className="home-hero__video"
+          muted
+          playsInline
+          loop
+          preload="auto"
+          poster={marketingAssets.heroPoster}
+          disablePictureInPicture
+          disableRemotePlayback
+          aria-hidden="true"
+          {...{ "webkit-playsinline": "true", "x5-playsinline": "true" }}
+        >
+          <source src={marketingAssets.heroVideo} type="video/mp4" />
+        </video>
+        {needsTap ? (
+          <button
+            type="button"
+            className="home-hero__play"
+            onClick={() => {
+              const video = videoRef.current;
+              if (!video) return;
+              video.muted = true;
+              void video.play().then(() => setNeedsTap(false)).catch(() => undefined);
+            }}
+            aria-label="Play video"
           >
-            <source src={marketingAssets.heroVideo} type="video/mp4" />
-          </video>
-        )}
+            <span aria-hidden="true" />
+          </button>
+        ) : null}
       </div>
     </section>
   );

@@ -16,7 +16,7 @@ export const siteConfig = {
   },
   identity: {
     legalEntity: "PLUG & GO" as string | null,
-    registeredAddress: "7-50/1, 3rd Floor, GNR Heights, Ramavarappadu, Vijayawada, Andhra Pradesh - 521108" as
+    registeredAddress: "D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230" as
       | string
       | null,
     gstin: null as string | null,
@@ -33,7 +33,7 @@ export const siteConfig = {
   social: {
     twitter: null as string | null,
     linkedin: null as string | null,
-    instagram: null as string | null,
+    instagram: "https://www.instagram.com/plugandgo.ev" as string | null,
     facebook: null as string | null,
     youtube: null as string | null,
   },
@@ -52,9 +52,9 @@ export const siteConfig = {
 export const navigation = {
   primary: [
     { href: "/", label: "Home" },
-    { href: "/#team", label: "Team" },
     { href: "/#app", label: "Mobile App" },
     { href: "/#locations", label: "Locations" },
+    { href: "/#team", label: "Team" },
     { href: "/gallery", label: "Gallery" },
     { href: "/blogs", label: "Blogs" },
     { href: "/contact", label: "Contact" },
