@@ -172,10 +172,9 @@ export function Header({
           <div className="header-end">
             <div className="header-actions">
               <Link
-                href="/#locations"
+                href="/find-charger"
                 className="header-find"
                 onClick={() => {
-                  setHash("#locations");
                   setOpen(false);
                 }}
               >
@@ -253,7 +252,7 @@ export function Header({
               </Link>
             ) : null}
             <div className="header-actions">
-              <Link href="/#locations" className="header-find" onClick={() => setHash("#locations")}>
+              <Link href="/find-charger" className="header-find">
                 <span className="header-find__long">Find a charger</span>
                 <span className="header-find__short">Find</span>
               </Link>

@@ -23,6 +23,7 @@ Official site: ${url}/
 
 - Email: ${siteConfig.contact.supportEmail}
 - Phone: ${siteConfig.contact.supportPhone}
+- WhatsApp: +91 96666 12412
 - Hours: ${siteConfig.contact.supportHours}
 - Registered office: ${voltran.offices[0]}
 - Contact page: ${url}/contact
@@ -39,6 +40,10 @@ ${voltran.app.lead}
 
 ${voltran.app.steps.map((step) => `${step.n}. ${step.title}: ${step.body}`).join("\n")}
 
+${voltran.app.manual.title}: ${voltran.app.manual.body}
+
+Fast chargers: ${voltran.chargers.levels.map((kw) => `${kw} kW`).join(", ")}.
+
 ## Brand facts
 
 - Legal name: ${siteConfig.identity.legalEntity}
@@ -48,12 +53,13 @@ ${voltran.app.steps.map((step) => `${step.n}. ${step.title}: ${step.body}`).join
 - Gallery: ${url}/gallery
 - Blogs: ${url}/blogs
 - Locations on the homepage: ${url}/#locations
+- Find a charger: ${url}/find-charger
 - Instagram: ${siteConfig.social.instagram}
 
 ## Do not invent
 
 - Do not invent extra hubs, tariffs, ratings, store listings, or unpublished social profile URLs.
-- The public station finder is not live.
-- LinkedIn, GitHub, YouTube, and app-store links are not live.
+- Find a charger lists published PLUG & GO hubs only.
+- LinkedIn, YouTube, and app-store links are not live.
 `;
 }

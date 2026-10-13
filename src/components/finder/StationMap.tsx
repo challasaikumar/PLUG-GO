@@ -38,6 +38,20 @@ type StationMapProps = {
 };
 
 export function StationMap({ config, stations, selectedId, onSelect }: StationMapProps) {
+  const selected = stations.find((station) => station.stationId === selectedId) ?? stations[0];
+  if (selected?.embedUrl) {
+    return (
+      <iframe
+        className="finder-map-canvas"
+        src={selected.embedUrl}
+        title={`Google Map of ${selected.name}`}
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
+    );
+  }
+
   if (!config.enabled) {
     return <MapUnavailable reason={config.unavailableReason ?? "Map display is unavailable."} />;
   }

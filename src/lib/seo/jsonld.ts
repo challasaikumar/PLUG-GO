@@ -72,6 +72,9 @@ export function organizationJsonLd() {
     knowsAbout: [
       "Electric vehicle charging",
       "DC fast charging",
+      "120 kW EV charging",
+      "180 kW EV charging",
+      "240 kW EV charging",
       "EV charge hubs",
       "Manned EV charging stations",
     ],
@@ -246,7 +249,7 @@ export function chargingHubsJsonLd() {
       "@type": ["ElectricVehicleChargingStation", "LocalBusiness"],
       "@id": `${url}/#hub-${slug}`,
       name: hub.name,
-      description: `${hub.name} EV charging hub in ${hub.area}. Manned and open 24x7.`,
+      description: `${hub.name} EV charging hub in ${hub.area}. Manned and open 24x7. Fast chargers at 120 kW, 180 kW, and 240 kW.`,
       url: `${url}/`,
       hasMap: mapsUrl(hub.mapsQuery),
       address: {
@@ -263,11 +266,18 @@ export function chargingHubsJsonLd() {
       },
       parentOrganization: { "@id": orgId() },
       openingHoursSpecification: alwaysOpenHours(),
-      amenityFeature: hub.amenities.map((amenity) => ({
-        "@type": "LocationFeatureSpecification",
-        name: amenity === "OPEN24-7" ? "Open 24x7" : "Parking",
-        value: true,
-      })),
+      amenityFeature: [
+        ...hub.amenities.map((amenity) => ({
+          "@type": "LocationFeatureSpecification",
+          name: amenity === "OPEN24-7" ? "Open 24x7" : "Parking",
+          value: true,
+        })),
+        ...voltran.chargers.levels.map((kw) => ({
+          "@type": "LocationFeatureSpecification",
+          name: `${kw} kW DC fast charger`,
+          value: true,
+        })),
+      ],
     };
     if (hasPublished(siteConfig.contact.supportPhone)) {
       node.telephone = siteConfig.contact.supportPhone;

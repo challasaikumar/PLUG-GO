@@ -36,6 +36,7 @@ export function listItemToCard(
     priceLabel: station.startingPriceLabel,
     accessSummary: `${accessTypeLabel(station.accessType)} · ${station.hoursSummary}`,
     href: station.href,
+    primaryLabel: station.href.includes("google.com/maps") ? "Get directions" : "View station",
     distanceLabel: station.distanceKm != null ? formatDistanceKm(station.distanceKm) : null,
     selected: options.selected,
     compact: options.compact ?? true,

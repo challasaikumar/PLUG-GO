@@ -413,6 +413,7 @@ export type PublicStationListItem = {
   pricePublished: boolean;
   lastVerifiedAt: string | null;
   distanceKm: number | null;
+  embedUrl?: string;
 };
 
 function toPublicListItem(

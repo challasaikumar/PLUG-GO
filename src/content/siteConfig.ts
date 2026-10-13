@@ -9,7 +9,7 @@ export const siteConfig = {
   promise: "Most reliable EV charging network in India",
   locale: "en-IN",
   featureFlags: {
-    finderLive: false,
+    finderLive: true,
     liveAvailability: false,
     payments: false,
     accounts: false,
@@ -20,7 +20,8 @@ export const siteConfig = {
       | string
       | null,
     gstin: null as string | null,
-    brandTagline: "Hub Model, Multiple DC Fast Chargers, Manned, Open 24x7, Cafeteria & Clean Washroom Facility",
+    brandTagline:
+      "Hub Model, 120 / 180 / 240 kW DC Fast Chargers, Manned, Open 24x7, Cafeteria & Clean Washroom Facility",
   },
   contact: {
     supportEmail: "info@plugandgo.in" as string | null,
@@ -36,6 +37,7 @@ export const siteConfig = {
     instagram: "https://www.instagram.com/plugandgo.ev" as string | null,
     facebook: null as string | null,
     youtube: null as string | null,
+    whatsapp: "https://wa.me/919666612412" as string | null,
   },
   apps: {
     playStore: null as string | null,

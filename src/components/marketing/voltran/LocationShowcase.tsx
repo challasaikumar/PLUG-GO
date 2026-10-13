@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ChargerPowerStrip } from "@/components/marketing/voltran/ChargerPowerStrip";
 import { SectionHead } from "@/components/marketing/voltran/SectionHead";
 import { directionsUrl, mapsUrl, voltran } from "@/content/voltran";
 
@@ -138,6 +139,7 @@ export function LocationShowcase() {
                 ))}
               </ul>
             ) : null}
+            <ChargerPowerStrip className="vt-kw--compact" />
             <div className="vt-loc-actions">
               <a className="vt-loc-cta" href={directionsUrl(hub.mapsQuery)} rel="noreferrer noopener" target="_blank">
                 <NavIcon />

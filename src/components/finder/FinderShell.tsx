@@ -1,15 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorRetryPanel } from "@/components/ui/ErrorRetryPanel";
 import { Modal } from "@/components/ui/Modal";
-import { SearchField } from "@/components/ui/SearchField";
 import { StationCardSkeleton } from "@/components/ui/Skeleton";
-import { StationCard } from "@/components/ui/StationCard";
 import type { PublicStationListItem } from "@/lib/catalogue/station-service";
 import {
   defaultFinderQuery,
@@ -19,10 +17,10 @@ import {
   type FinderQuery,
 } from "@/lib/finder/query";
 import type { PublicMapConfig } from "@/lib/maps/config";
-import { connectorTypeLabel } from "@/lib/catalogue/labels";
+import { accessTypeLabel, connectorTypeLabel } from "@/lib/catalogue/labels";
 import { ANALYTICS_EVENTS, track } from "@/lib/analytics";
 import { FinderFilters, type FinderFacets } from "./FinderFilters";
-import { listItemToCard } from "./listItemToCard";
+import { ChargerPowerStrip } from "@/components/marketing/voltran/ChargerPowerStrip";
 import { StationMap } from "./StationMap";
 
 export type FinderListResult = {
@@ -72,7 +70,6 @@ export function FinderShell({
     initialResult?.stations[0]?.stationId ?? null,
   );
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [mapOpen, setMapOpen] = useState(false);
   const queryRef = useRef(query);
   const originRef = useRef<Origin | null>(null);
   const debounceRef = useRef<number | null>(null);
@@ -207,22 +204,13 @@ export function FinderShell({
   const stations = result?.stations ?? EMPTY_STATIONS;
   const publishedTotal = result?.publishedTotal ?? 0;
   const matchedTotal = result?.total ?? 0;
-
-  const list = useMemo(
-    () =>
-      stations.map((station) =>
-        listItemToCard(station, {
-          compact: true,
-          selected: station.stationId === selectedId,
-        }),
-      ),
-    [selectedId, stations],
-  );
+  const mapUsable = mapConfig.enabled || stations.some((item) => item.embedUrl);
+  const hasFacets = facets.connectorTypes.length > 0 || facets.amenities.length > 0 || facets.hasAccessibility;
 
   const resultsLabel =
     publishedTotal === 0
-      ? "No published stations"
-      : `${matchedTotal} published station${matchedTotal === 1 ? "" : "s"}`;
+      ? "No published hubs yet"
+      : `${matchedTotal} published hub${matchedTotal === 1 ? "" : "s"}`;
 
   function renderListBody() {
     if (loading && !result) {
@@ -263,21 +251,16 @@ export function FinderShell({
       );
     }
     return (
-      <ul className="finder-station-list" aria-label="Published stations">
-        {list.map((card, index) => {
-          const station = stations[index];
-          return (
-            <li key={card.id}>
-              <StationCard
-                station={card}
-                selected={station.stationId === selectedId}
-                compact
-                onSelect={mapConfig.enabled ? () => setSelectedId(station.stationId) : undefined}
-                selectLabel="Show on map"
-              />
-            </li>
-          );
-        })}
+      <ul className="find-hubs" aria-label="Published hubs">
+        {stations.map((station) => (
+          <li key={station.stationId}>
+            <HubCard
+              station={station}
+              selected={station.stationId === selectedId}
+              onSelect={mapUsable ? () => setSelectedId(station.stationId) : undefined}
+            />
+          </li>
+        ))}
       </ul>
     );
   }
@@ -295,40 +278,38 @@ export function FinderShell({
   );
 
   return (
-    <div className="finder-shell">
+    <div className="find-desk">
       <form
-        className="finder-search"
+        className="find-dock"
         onSubmit={(event) => {
           event.preventDefault();
           if (debounceRef.current) window.clearTimeout(debounceRef.current);
           applyQuery({ q: qInput.trim(), page: 1 });
         }}
       >
-        <SearchField
+        <label className="find-dock__label" htmlFor="finder-q">
+          Search hubs
+        </label>
+        <input
           id="finder-q"
           name="q"
-          label="Search published stations"
-          placeholder="Station name, city, state, landmark, address, or pincode"
+          className="find-dock__input"
           value={qInput}
           maxLength={FINDER_QUERY_MAX_LENGTH}
-          onChange={onSearchInput}
-          onSubmit={(value) => {
-            if (debounceRef.current) window.clearTimeout(debounceRef.current);
-            applyQuery({ q: value.trim(), page: 1 });
-          }}
-          loading={searching}
-          help="Results update as you pause typing. Precise location is used only after you ask, and is not stored."
+          placeholder="City, hub name, or pincode"
+          autoComplete="off"
+          onChange={(event) => onSearchInput(event.target.value)}
         />
-        <div className="finder-search-actions">
-          <Button type="submit">Search</Button>
-          <Button type="button" variant="outline" onClick={requestLocation}>
-            Use my location
-          </Button>
-        </div>
+        <button type="submit" className="find-dock__go" disabled={searching}>
+          {searching ? "Searching" : "Search"}
+        </button>
+        <button type="button" className="find-dock__near" onClick={requestLocation}>
+          Near me
+        </button>
       </form>
 
       {locationMessage ? (
-        <div style={{ marginTop: 12 }}>
+        <div className="find-alert">
           <Alert variant={locationDenied ? "warning" : "info"} title={locationDenied ? "Location not used" : "Location for this visit"}>
             {locationMessage}
           </Alert>
@@ -336,11 +317,11 @@ export function FinderShell({
       ) : null}
 
       {preferredConnectorType && !query.connectorType ? (
-        <div style={{ marginTop: 12 }}>
+        <div className="find-alert">
           <Alert variant="info" title="Vehicle connector preference">
             Your saved vehicle uses {connectorTypeLabel(preferredConnectorType)}. Apply this as a visible filter if you
-            want. Other published stations stay listed until you do.
-            <span style={{ display: "inline-block", marginLeft: 8 }}>
+            want.
+            <span className="find-alert__action">
               <Button
                 type="button"
                 size="sm"
@@ -359,106 +340,128 @@ export function FinderShell({
         </div>
       ) : null}
 
-      <div className="finder-toolbar">
-        <p id={resultsId} className="type-small" aria-live="polite" style={{ margin: 0 }}>
+      <div className="find-meta">
+        <p id={resultsId} aria-live="polite">
           {resultsLabel}
-          {searching ? " · Updating results" : ""}
+          {searching ? " · Updating" : ""}
           {filterCount > 0 ? ` · ${filterCount} filter${filterCount === 1 ? "" : "s"} on` : ""}
         </p>
-        <div className="finder-toolbar-actions">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="finder-mobile-only"
-            onClick={() => setFiltersOpen(true)}
-          >
+        {hasFacets ? (
+          <button type="button" className="find-meta__filters finder-mobile-only" onClick={() => setFiltersOpen(true)}>
             Filters{filterCount ? ` (${filterCount})` : ""}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="finder-mobile-only"
-            onClick={() => setMapOpen(true)}
-          >
-            Map
-          </Button>
-        </div>
+          </button>
+        ) : null}
       </div>
 
-      <div className="finder-desktop-only finder-desktop-filters">
-        <FinderFilters
-          query={query}
-          facets={facets}
-          locationReady={Boolean(origin)}
-          onChange={(patch) => applyQuery(patch)}
-          onClear={clearFilters}
-        />
-      </div>
+      {hasFacets ? (
+        <div className="finder-desktop-only finder-desktop-filters">
+          <FinderFilters
+            query={query}
+            facets={facets}
+            locationReady={Boolean(origin)}
+            onChange={(patch) => applyQuery(patch)}
+            onClear={clearFilters}
+          />
+        </div>
+      ) : null}
 
       {result?.nearestRequiresLocation ? (
-        <div style={{ margin: "12px 0" }}>
+        <div className="find-alert">
           <Alert variant="info" title="Nearest needs your location">
-            Sorted by name until you use your location or search a place. Location is not written into the
-            shareable URL.
+            Sorted by name until you use your location or search a place.
           </Alert>
         </div>
       ) : null}
 
-      <div className="finder-split">
-        <div className="finder-list-pane" aria-describedby={resultsId}>
+      <div className="find-board">
+        <div className="find-board__map" aria-hidden={matchedTotal === 0}>
+          {mapPane}
+        </div>
+        <div className="find-board__list" aria-describedby={resultsId}>
           {renderListBody()}
           {matchedTotal > (result?.pageSize ?? 0) ? (
-            <div className="finder-pagination">
-              <Button
-                variant="outline"
-                size="sm"
+            <div className="find-pager">
+              <button
+                type="button"
+                className="find-pager__btn"
                 disabled={!result || result.page <= 1 || searching}
                 onClick={() => applyQuery({ page: Math.max(1, query.page - 1) })}
               >
                 Previous
-              </Button>
-              <p className="type-small" style={{ margin: 0 }}>
-                Page {result?.page ?? 1}
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={
-                  !result || result.page * result.pageSize >= matchedTotal || searching
-                }
+              </button>
+              <p>Page {result?.page ?? 1}</p>
+              <button
+                type="button"
+                className="find-pager__btn"
+                disabled={!result || result.page * result.pageSize >= matchedTotal || searching}
                 onClick={() => applyQuery({ page: query.page + 1 })}
               >
                 Next
-              </Button>
+              </button>
             </div>
           ) : null}
         </div>
-        <div className="finder-map-pane finder-desktop-only">{mapPane}</div>
       </div>
 
-      <Modal open={filtersOpen} title="Filters and sort" onClose={() => setFiltersOpen(false)} variant="sheet">
-        <FinderFilters
-          query={query}
-          facets={facets}
-          locationReady={Boolean(origin)}
-          onChange={(patch) => applyQuery(patch)}
-          onClear={() => {
-            clearFilters();
-            setFiltersOpen(false);
-          }}
-        />
-        <div style={{ marginTop: 16 }}>
-          <Button block onClick={() => setFiltersOpen(false)}>
-            Show {matchedTotal} station{matchedTotal === 1 ? "" : "s"}
-          </Button>
-        </div>
-      </Modal>
-
-      <Modal open={mapOpen} title="Map" onClose={() => setMapOpen(false)} variant="sheet">
-        <div className="finder-map-sheet">{mapPane}</div>
-      </Modal>
+      {hasFacets ? (
+        <Modal open={filtersOpen} title="Filters and sort" onClose={() => setFiltersOpen(false)} variant="sheet">
+          <FinderFilters
+            query={query}
+            facets={facets}
+            locationReady={Boolean(origin)}
+            onChange={(patch) => applyQuery(patch)}
+            onClear={() => {
+              clearFilters();
+              setFiltersOpen(false);
+            }}
+          />
+          <div style={{ marginTop: 16 }}>
+            <Button block onClick={() => setFiltersOpen(false)}>
+              Show {matchedTotal} hub{matchedTotal === 1 ? "" : "s"}
+            </Button>
+          </div>
+        </Modal>
+      ) : null}
     </div>
+  );
+}
+
+function HubCard({
+  station,
+  selected,
+  onSelect,
+}: {
+  station: PublicStationListItem;
+  selected: boolean;
+  onSelect?: () => void;
+}) {
+  const place = [station.locality, station.city].filter(Boolean).join(", ") || station.city;
+  const hours = station.hoursSummary;
+  const access = accessTypeLabel(station.accessType);
+
+  return (
+    <article className={selected ? "find-hub is-on" : "find-hub"} id={`station-card-${station.stationId}`}>
+      <div className="find-hub__top">
+        {station.openNow ? <span className="find-hub__live">Open 24×7</span> : <span className="find-hub__tag">{hours}</span>}
+        {selected ? <span className="find-hub__pin">On the map</span> : null}
+      </div>
+      <h2>{station.name}</h2>
+      <p className="find-hub__place">{place}</p>
+      <p className="find-hub__meta">
+        {access}
+        {station.distanceKm != null ? ` · ${station.distanceKm.toFixed(1)} km` : ""}
+      </p>
+      <ChargerPowerStrip className="vt-kw--compact" />
+      <div className="find-hub__actions">
+        {onSelect ? (
+          <button type="button" className="find-hub__map" onClick={onSelect} aria-pressed={selected}>
+            {selected ? "Showing on map" : "Show on map"}
+          </button>
+        ) : null}
+        <a className="find-hub__go" href={station.href} rel="noreferrer noopener" target="_blank">
+          Get directions
+        </a>
+      </div>
+    </article>
   );
 }

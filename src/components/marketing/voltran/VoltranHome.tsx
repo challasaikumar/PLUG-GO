@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ContactDesk } from "@/components/marketing/voltran/ContactDesk";
 import { HomeFaq } from "@/components/marketing/voltran/HomeFaq";
+import { ChargerPowerStrip } from "@/components/marketing/voltran/ChargerPowerStrip";
 import { LocationShowcase } from "@/components/marketing/voltran/LocationShowcase";
 import { SectionHead } from "@/components/marketing/voltran/SectionHead";
 import { TeamStack } from "@/components/marketing/voltran/TeamStack";
@@ -39,6 +40,24 @@ export function VoltranHome({
               />
             </div>
           </div>
+          <ChargerPowerStrip />
+          <article className="vt-manual">
+            <div className="vt-manual__photo">
+              <Image
+                fill
+                src={voltran.app.manual.image}
+                alt="Station staff plugging in a vehicle at a PLUG & GO charge hub"
+                sizes="(min-width: 768px) 52vw, 92vw"
+                className="vt-manual__img"
+                unoptimized
+              />
+            </div>
+            <div className="vt-manual__copy">
+              <p className="vt-manual__kicker">{voltran.app.manual.kicker}</p>
+              <h3>{voltran.app.manual.title}</h3>
+              <p>{voltran.app.manual.body}</p>
+            </div>
+          </article>
         </div>
       </section>
 

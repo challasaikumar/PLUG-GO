@@ -11,7 +11,7 @@ export const homeFaqs = [
     id: "facilities",
     question: "What facilities are at a PLUG & GO charge hub?",
     answer:
-      "Hubs use a hub model with multiple DC fast chargers, are manned and open 24x7, and include cafeteria and clean washroom facilities.",
+      "Hubs use a hub model with 120 kW, 180 kW, and 240 kW DC fast chargers, are manned and open 24x7, and include cafeteria and clean washroom facilities. Station staff also provide a manual charging service: bring your car or bike and they will guide you and charge the vehicle.",
   },
   {
     id: "contact",

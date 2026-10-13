@@ -6,9 +6,9 @@ import type { ReactNode } from "react";
 import {
   IconFooterMail,
   IconFooterPhone,
-  IconSocGitHub,
   IconSocInstagram,
   IconSocLinkedIn,
+  IconSocWhatsApp,
   IconSocYouTube,
 } from "@/components/layout/footerIcons";
 import { BrandLogo } from "@/components/brand/BrandLogo";
@@ -18,7 +18,7 @@ import { voltran } from "@/content/voltran";
 
 const socials = [
   { id: "linkedin", href: siteConfig.social.linkedin, label: "LinkedIn", Icon: IconSocLinkedIn },
-  { id: "github", href: null, label: "GitHub", Icon: IconSocGitHub },
+  { id: "whatsapp", href: siteConfig.social.whatsapp, label: "WhatsApp", Icon: IconSocWhatsApp },
   { id: "instagram", href: siteConfig.social.instagram, label: "Instagram", Icon: IconSocInstagram },
   { id: "youtube", href: siteConfig.social.youtube, label: "YouTube", Icon: IconSocYouTube },
 ] as const;

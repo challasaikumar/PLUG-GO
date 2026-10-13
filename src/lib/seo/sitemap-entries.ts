@@ -64,10 +64,7 @@ export function staticPublicSitemapEntries(now = new Date()): SitemapPathEntry[]
 export async function collectSitemapEntries(now = new Date()): Promise<SitemapPathEntry[]> {
   const includeFinder = await isFeatureEnabled("publicStationFinder");
   const includeEditorial = await isFeatureEnabled("publishedCityRouteContent");
-  const entries = staticPublicSitemapEntries(now).filter((entry) => {
-    if (entry.path === "/find-charger" && !includeFinder) return false;
-    return true;
-  });
+  const entries = staticPublicSitemapEntries(now);
   if (!isDatabaseConfigured()) return entries.filter((entry) => isSitemapEligiblePath(entry.path));
 
   try {

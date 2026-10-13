@@ -10,7 +10,7 @@ export const voltran = {
       "15 hubs across AP & TG",
       "Multiple chargers / location",
       "Manned & Open 24 x 7",
-      "60 KW DC fast chargers",
+      "120, 180 and 240 kW DC fast chargers",
       "Multiple payment options",
       "Clean washrooms",
       "Cafeteria facility",
@@ -29,6 +29,14 @@ export const voltran = {
         bio: "Sets the direction for PLUG & GO and the charge-hub network across highways and cities.",
       },
       {
+        name: "Kishore Medasani",
+        role: "CO-FOUNDER",
+        initials: "KM",
+        image: "/gallery/image%20copy%203.png",
+        color: "#064e2e",
+        bio: "Co-founder of PLUG & GO, building the charge-hub network across highways and cities.",
+      },
+      {
         name: "Chalavadi Gupta Harish Kumar",
         role: "CO-FOUNDER",
         initials: "CH",
@@ -42,14 +50,6 @@ export const voltran = {
         initials: "PK",
         image: "/gallery/image%20copy.png",
         color: "#008f4b",
-        bio: "Co-founder of PLUG & GO, building the charge-hub network across highways and cities.",
-      },
-      {
-        name: "Kishore Medasani",
-        role: "CO-FOUNDER",
-        initials: "KM",
-        image: "/gallery/image%20copy%203.png",
-        color: "#064e2e",
         bio: "Co-founder of PLUG & GO, building the charge-hub network across highways and cities.",
       },
       {
@@ -88,6 +88,16 @@ export const voltran = {
         body: "You can gain rewards for each charging session, download invoices, view / add cars and lot more.",
       },
     ],
+    manual: {
+      kicker: "Staff assisted",
+      title: "Manual charging",
+      body: "Bring your car or bike to the hub. The station team will guide you and charge the vehicle, so you do not have to do it yourself.",
+      image: "/manual%20ev.jpg",
+    },
+  },
+  chargers: {
+    label: "Fast charger",
+    levels: [240, 180, 120],
   },
   offices: [
     "D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230",

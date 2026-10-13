@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { FinderShell } from "@/components/finder/FinderShell";
+import { HeroFieldPage } from "@/components/marketing/HeroFieldPage";
+import { SectionHead } from "@/components/marketing/voltran/SectionHead";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Alert } from "@/components/ui/Alert";
 import { copy } from "@/content/copy";
+import { listPublishedHubs } from "@/lib/catalogue/published-hubs";
 import {
   listPublicStations,
   listPublishedFilterFacets,
@@ -14,10 +18,10 @@ import {
 } from "@/lib/finder/query";
 import { getPublicMapConfig } from "@/lib/maps/config";
 import { pageMeta } from "@/lib/metadata";
+import { breadcrumbListJsonLd } from "@/lib/seo/jsonld";
 import { getPreferredConnectorType } from "@/lib/account/vehicles";
 import { getOptionalDriver } from "@/lib/auth/driver";
 import { isFeatureEnabled } from "@/lib/release/overrides";
-import { FeatureUnavailable } from "@/components/release/FeatureUnavailable";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -39,14 +43,6 @@ function paramsFromRecord(record: Record<string, string | string[] | undefined>)
 }
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
-  if (!(await isFeatureEnabled("publicStationFinder"))) {
-    return pageMeta({
-      title: copy.findCharger.title,
-      description: copy.findCharger.description,
-      path: "/find-charger",
-      index: false,
-    });
-  }
   const raw = await searchParams;
   const parsed = parseFinderQuery(paramsFromRecord(raw));
   const query = parsed.ok ? parsed.query : defaultFinderQuery();
@@ -60,28 +56,19 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 }
 
 export default async function FindChargerPage({ searchParams }: PageProps) {
-  if (!(await isFeatureEnabled("publicStationFinder"))) {
-    return (
-      <FeatureUnavailable title="Find a charger">
-        Public station search is not open on this environment. Searching stays off until FLAG_PUBLIC_FINDER is enabled
-        and published stations exist.
-      </FeatureUnavailable>
-    );
-  }
   const raw = await searchParams;
   const parsed = parseFinderQuery(paramsFromRecord(raw));
   const query = parsed.ok ? parsed.query : defaultFinderQuery();
   const mapConfig = getPublicMapConfig();
   const driver = await getOptionalDriver();
   const preferredConnectorType = driver ? await getPreferredConnectorType(driver.id) : null;
+  const publishedHubs = listPublishedHubs(query);
 
   let initialError: string | null = null;
-  let initialResult = null;
+  let initialResult = publishedHubs;
   let facets = { connectorTypes: [] as string[], amenities: [] as string[], hasAccessibility: false };
 
-  if (!isDatabaseConfigured()) {
-    initialError = "The station catalogue is not configured on this server.";
-  } else {
+  if (isDatabaseConfigured() && (await isFeatureEnabled("publicStationFinder"))) {
     try {
       const [list, nextFacets] = await Promise.all([
         listPublicStations({
@@ -101,36 +88,47 @@ export default async function FindChargerPage({ searchParams }: PageProps) {
         }),
         listPublishedFilterFacets(),
       ]);
-      initialResult = list;
-      facets = nextFacets;
+      if (list.publishedTotal > 0) {
+        initialResult = list;
+        facets = nextFacets;
+      }
     } catch {
-      initialError = "The station list could not be loaded. Try again, or search later.";
+      initialError = null;
+      initialResult = publishedHubs;
     }
   }
 
   return (
-    <div className="container-png finder-page">
-      <h1 className="type-h1" style={{ margin: "0 0 8px" }}>
-        {copy.findCharger.h1}
-      </h1>
-      <p className="type-body-lg" style={{ margin: "0 0 24px", color: "var(--color-text-secondary)", maxWidth: "42rem" }}>
-        {copy.findCharger.lead}
-      </p>
-      {!parsed.ok ? (
-        <div style={{ marginBottom: 16 }}>
-          <Alert variant="warning" title="Filters were adjusted">
-            {Object.values(parsed.errors).join(" ")} Search still works without those values.
-          </Alert>
-        </div>
-      ) : null}
-      <FinderShell
-        initialQuery={query}
-        initialResult={initialResult}
-        initialError={isDatabaseConfigured() ? (initialResult ? null : initialError) : initialError}
-        facets={facets}
-        mapConfig={mapConfig}
-        preferredConnectorType={preferredConnectorType}
+    <HeroFieldPage>
+      <JsonLd
+        data={breadcrumbListJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Find a charger", path: "/find-charger" },
+        ])}
       />
-    </div>
+      <div className="vt vt-finder">
+        <div className="vt-wrap vt-wrap--wide">
+          <SectionHead id="finder-heading" as="h1">
+            Find a charger
+          </SectionHead>
+          <p className="vt-lead">{copy.findCharger.lead}</p>
+          {!parsed.ok ? (
+            <div className="find-alert">
+              <Alert variant="warning" title="Filters were adjusted">
+                {Object.values(parsed.errors).join(" ")} Search still works without those values.
+              </Alert>
+            </div>
+          ) : null}
+          <FinderShell
+            initialQuery={query}
+            initialResult={initialResult}
+            initialError={initialError}
+            facets={facets}
+            mapConfig={mapConfig}
+            preferredConnectorType={preferredConnectorType}
+          />
+        </div>
+      </div>
+    </HeroFieldPage>
   );
 }

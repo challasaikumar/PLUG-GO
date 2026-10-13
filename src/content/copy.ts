@@ -69,8 +69,8 @@ export const copy = {
     title: "Find a charger",
     description:
       "Search published Plug and Go EV charging stations in India by city, pincode, landmark, connector, and access. Get directions without creating an account.",
-    h1: "Find a compatible charger",
-    lead: "Search the published catalogue. The list is the complete way to discover a station — the map is optional and may be unavailable. Directions work without an account. This site does not take bookings or start charging.",
+    h1: "Find a charger",
+    lead: "Look up published PLUG & GO hubs, see them on the map, and get directions. No account needed.",
   },
   about: {
     title: "About",

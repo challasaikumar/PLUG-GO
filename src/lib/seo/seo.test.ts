@@ -158,7 +158,7 @@ describe("answer engines", () => {
     expect(text).toContain("info@plugandgo.in");
     expect(text).toContain("+91 85559 66678");
     expect(text).toContain("PLUG & GO EV CHARGING STATION");
-    expect(text).toContain("The public station finder is not live.");
+    expect(text).toContain("Find a charger lists published PLUG & GO hubs only.");
     expect(text).not.toContain("linkedin.com");
   });
 
