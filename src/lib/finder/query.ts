@@ -1,6 +1,5 @@
-import { ACCESS_TYPES, CONNECTOR_TYPES } from "@/lib/catalogue/validation";
+import { ACCESS_TYPES, CONNECTOR_TYPES, PUBLIC_STATUSES, type PublicStatus } from "@/lib/catalogue/labels";
 import { isValidLatitude, isValidLongitude } from "@/lib/geo";
-import { PUBLIC_STATUSES, type PublicStatus } from "@/lib/status";
 
 export const FINDER_SORTS = ["name", "nearest", "availability", "power", "price"] as const;
 export type FinderSort = (typeof FINDER_SORTS)[number];

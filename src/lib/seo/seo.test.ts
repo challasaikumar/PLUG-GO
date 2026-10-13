@@ -23,7 +23,7 @@ describe("sitemap eligibility", () => {
     expect(paths).toContain("/");
     expect(paths).toContain("/how-to-charge");
     expect(paths).toContain("/connector-guide");
-    expect(paths).toContain("/insights");
+    expect(paths).toContain("/find-charger");
     expect(paths).not.toContain("/admin");
     const mapped = toMetadataSitemap(entries);
     expect(mapped.every((row) => row.url.startsWith("http"))).toBe(true);

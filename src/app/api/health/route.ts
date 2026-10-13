@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { liveHealth } from "@/lib/release/health";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const body = await liveHealth();
-  const response = NextResponse.json(body);
+  const response = NextResponse.json({
+    ok: true,
+    status: "live",
+    service: "plug-and-go",
+  });
   response.headers.set("Cache-Control", "no-store");
   return response;
 }

@@ -1,7 +1,7 @@
 /**
  * Central Voltran site configuration.
  * Empty strings / null mean “not published yet” — never invent values.
- * Runtime enablement is `src/lib/release/flags.ts`. The object below is not a feature switch.
+ * Unpublished fields stay empty — never invent values.
  */
 
 export const siteConfig = {
@@ -103,7 +103,6 @@ export const publicRoutes = [
   "/find-charger",
   "/how-to-charge",
   "/connector-guide",
-  "/insights",
   "/blogs",
   "/gallery",
   "/about",

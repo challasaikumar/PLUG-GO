@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { PublicStationListItem } from "@/lib/catalogue/station-service";
+import type { PublicStationListItem } from "@/lib/catalogue/published-hubs";
+import { statusLabel } from "@/lib/catalogue/labels";
 import { INDIA_OVERVIEW } from "@/lib/maps/view";
-import { statusLabel } from "@/lib/status";
 
 type GoogleMapProps = {
   apiKey: string;

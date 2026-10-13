@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { PublicMapConfig } from "@/lib/maps/config";
-import type { PublicStationListItem } from "@/lib/catalogue/station-service";
+import type { PublicStationListItem } from "@/lib/catalogue/published-hubs";
 import { MapUnavailable } from "./MapUnavailable";
 import { Spinner } from "@/components/ui/Spinner";
 

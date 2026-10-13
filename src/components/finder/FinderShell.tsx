@@ -3,12 +3,10 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Alert } from "@/components/ui/Alert";
-import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorRetryPanel } from "@/components/ui/ErrorRetryPanel";
-import { Modal } from "@/components/ui/Modal";
 import { StationCardSkeleton } from "@/components/ui/Skeleton";
-import type { PublicStationListItem } from "@/lib/catalogue/station-service";
+import type { PublicStationListItem } from "@/lib/catalogue/published-hubs";
 import {
   defaultFinderQuery,
   finderActiveFilterCount,
@@ -17,9 +15,8 @@ import {
   type FinderQuery,
 } from "@/lib/finder/query";
 import type { PublicMapConfig } from "@/lib/maps/config";
-import { accessTypeLabel, connectorTypeLabel } from "@/lib/catalogue/labels";
+import { accessTypeLabel } from "@/lib/catalogue/labels";
 import { ANALYTICS_EVENTS, track } from "@/lib/analytics";
-import { FinderFilters, type FinderFacets } from "./FinderFilters";
 import { ChargerPowerStrip } from "@/components/marketing/voltran/ChargerPowerStrip";
 import { StationMap } from "./StationMap";
 
@@ -37,9 +34,7 @@ type FinderShellProps = {
   initialQuery: FinderQuery;
   initialResult: FinderListResult | null;
   initialError: string | null;
-  facets: FinderFacets;
   mapConfig: PublicMapConfig;
-  preferredConnectorType?: string | null;
 };
 
 type Origin = { lat: number; lng: number };
@@ -50,9 +45,7 @@ export function FinderShell({
   initialQuery,
   initialResult,
   initialError,
-  facets,
   mapConfig,
-  preferredConnectorType = null,
 }: FinderShellProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -69,7 +62,6 @@ export function FinderShell({
   const [selectedId, setSelectedId] = useState<string | null>(
     initialResult?.stations[0]?.stationId ?? null,
   );
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const queryRef = useRef(query);
   const originRef = useRef<Origin | null>(null);
   const debounceRef = useRef<number | null>(null);
@@ -205,7 +197,6 @@ export function FinderShell({
   const publishedTotal = result?.publishedTotal ?? 0;
   const matchedTotal = result?.total ?? 0;
   const mapUsable = mapConfig.enabled || stations.some((item) => item.embedUrl);
-  const hasFacets = facets.connectorTypes.length > 0 || facets.amenities.length > 0 || facets.hasAccessibility;
 
   const resultsLabel =
     publishedTotal === 0
@@ -316,54 +307,13 @@ export function FinderShell({
         </div>
       ) : null}
 
-      {preferredConnectorType && !query.connectorType ? (
-        <div className="find-alert">
-          <Alert variant="info" title="Vehicle connector preference">
-            Your saved vehicle uses {connectorTypeLabel(preferredConnectorType)}. Apply this as a visible filter if you
-            want.
-            <span className="find-alert__action">
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  applyQuery({
-                    connectorType: preferredConnectorType as FinderQuery["connectorType"],
-                    page: 1,
-                  })
-                }
-              >
-                Apply filter
-              </Button>
-            </span>
-          </Alert>
-        </div>
-      ) : null}
-
       <div className="find-meta">
         <p id={resultsId} aria-live="polite">
           {resultsLabel}
           {searching ? " · Updating" : ""}
           {filterCount > 0 ? ` · ${filterCount} filter${filterCount === 1 ? "" : "s"} on` : ""}
         </p>
-        {hasFacets ? (
-          <button type="button" className="find-meta__filters finder-mobile-only" onClick={() => setFiltersOpen(true)}>
-            Filters{filterCount ? ` (${filterCount})` : ""}
-          </button>
-        ) : null}
       </div>
-
-      {hasFacets ? (
-        <div className="finder-desktop-only finder-desktop-filters">
-          <FinderFilters
-            query={query}
-            facets={facets}
-            locationReady={Boolean(origin)}
-            onChange={(patch) => applyQuery(patch)}
-            onClear={clearFilters}
-          />
-        </div>
-      ) : null}
 
       {result?.nearestRequiresLocation ? (
         <div className="find-alert">
@@ -402,26 +352,6 @@ export function FinderShell({
           ) : null}
         </div>
       </div>
-
-      {hasFacets ? (
-        <Modal open={filtersOpen} title="Filters and sort" onClose={() => setFiltersOpen(false)} variant="sheet">
-          <FinderFilters
-            query={query}
-            facets={facets}
-            locationReady={Boolean(origin)}
-            onChange={(patch) => applyQuery(patch)}
-            onClear={() => {
-              clearFilters();
-              setFiltersOpen(false);
-            }}
-          />
-          <div style={{ marginTop: 16 }}>
-            <Button block onClick={() => setFiltersOpen(false)}>
-              Show {matchedTotal} hub{matchedTotal === 1 ? "" : "s"}
-            </Button>
-          </div>
-        </Modal>
-      ) : null}
     </div>
   );
 }

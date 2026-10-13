@@ -7,11 +7,6 @@ import { Alert } from "@/components/ui/Alert";
 import { copy } from "@/content/copy";
 import { listPublishedHubs } from "@/lib/catalogue/published-hubs";
 import {
-  listPublicStations,
-  listPublishedFilterFacets,
-} from "@/lib/catalogue/station-service";
-import { isDatabaseConfigured } from "@/lib/db/prisma";
-import {
   defaultFinderQuery,
   finderShouldIndex,
   parseFinderQuery,
@@ -19,9 +14,6 @@ import {
 import { getPublicMapConfig } from "@/lib/maps/config";
 import { pageMeta } from "@/lib/metadata";
 import { breadcrumbListJsonLd } from "@/lib/seo/jsonld";
-import { getPreferredConnectorType } from "@/lib/account/vehicles";
-import { getOptionalDriver } from "@/lib/auth/driver";
-import { isFeatureEnabled } from "@/lib/release/overrides";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,43 +52,7 @@ export default async function FindChargerPage({ searchParams }: PageProps) {
   const parsed = parseFinderQuery(paramsFromRecord(raw));
   const query = parsed.ok ? parsed.query : defaultFinderQuery();
   const mapConfig = getPublicMapConfig();
-  const driver = await getOptionalDriver();
-  const preferredConnectorType = driver ? await getPreferredConnectorType(driver.id) : null;
-  const publishedHubs = listPublishedHubs(query);
-
-  let initialError: string | null = null;
-  let initialResult = publishedHubs;
-  let facets = { connectorTypes: [] as string[], amenities: [] as string[], hasAccessibility: false };
-
-  if (isDatabaseConfigured() && (await isFeatureEnabled("publicStationFinder"))) {
-    try {
-      const [list, nextFacets] = await Promise.all([
-        listPublicStations({
-          page: query.page,
-          pageSize: query.pageSize,
-          q: query.q || undefined,
-          city: query.city,
-          state: query.state,
-          connectorType: query.connectorType,
-          minKw: query.minKw,
-          availability: query.availability,
-          access: query.access,
-          openNow: query.openNow,
-          amenity: query.amenity,
-          accessible: query.accessible,
-          sort: query.sort,
-        }),
-        listPublishedFilterFacets(),
-      ]);
-      if (list.publishedTotal > 0) {
-        initialResult = list;
-        facets = nextFacets;
-      }
-    } catch {
-      initialError = null;
-      initialResult = publishedHubs;
-    }
-  }
+  const initialResult = listPublishedHubs(query);
 
   return (
     <HeroFieldPage>
@@ -122,10 +78,8 @@ export default async function FindChargerPage({ searchParams }: PageProps) {
           <FinderShell
             initialQuery={query}
             initialResult={initialResult}
-            initialError={initialError}
-            facets={facets}
+            initialError={null}
             mapConfig={mapConfig}
-            preferredConnectorType={preferredConnectorType}
           />
         </div>
       </div>

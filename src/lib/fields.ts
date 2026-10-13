@@ -3,7 +3,7 @@
  * so submitted values are trimmed, typed, and rejected when incomplete.
  */
 
-import { parseMobileNumber } from "@/lib/auth/phone";
+import { parseMobileNumber } from "@/lib/phone";
 
 export const FIELD_LIMITS = {
   name: 80,

@@ -7,8 +7,7 @@ import { PageIntro } from "@/components/marketing/PageIntro";
 import { ProductIcon, varyIconKind } from "@/components/marketing/ProductIcon";
 import { connectorGuide } from "@/content/guides";
 import { ANALYTICS_EVENTS } from "@/lib/analytics";
-import { CONNECTOR_TYPES } from "@/lib/catalogue/validation";
-import { connectorTypeLabel } from "@/lib/catalogue/labels";
+import { CONNECTOR_TYPES, connectorTypeLabel } from "@/lib/catalogue/labels";
 import { breadcrumbListJsonLd, faqPageJsonLd } from "@/lib/seo/jsonld";
 import { pageMeta } from "@/lib/metadata";
 

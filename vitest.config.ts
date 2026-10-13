@@ -22,23 +22,6 @@ function loadEnvFile(name: string) {
 loadEnvFile(".env");
 loadEnvFile(".env.local");
 
-const TEST_FLAG_DEFAULTS: Record<string, string> = {
-  FLAG_PUBLIC_FINDER: "true",
-  FLAG_PUBLISHED_CONTENT: "true",
-  FLAG_DRIVER_OTP: "true",
-  FLAG_BOOKING: "true",
-  FLAG_PAYMENT_CHECKOUT: "true",
-  FLAG_REFUNDS: "true",
-  FLAG_OPS_PORTAL: "true",
-  FLAG_HOST_PORTAL: "true",
-  FLAG_FLEET_PORTAL: "true",
-  FLAG_PILOT_REMOTE_CHARGING: "true",
-};
-
-for (const [key, value] of Object.entries(TEST_FLAG_DEFAULTS)) {
-  if (!process.env[key]) process.env[key] = value;
-}
-
 export default defineConfig({
   test: {
     environment: "node",

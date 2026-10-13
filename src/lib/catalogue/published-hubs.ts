@@ -1,6 +1,38 @@
 import { directionsUrl, voltran } from "@/content/voltran";
-import type { PublicStationListItem } from "@/lib/catalogue/station-service";
 import type { FinderQuery } from "@/lib/finder/query";
+
+export type PublicStationListItem = {
+  stationId: string;
+  slug: string;
+  name: string;
+  city: string;
+  state: string;
+  locality: string;
+  pincode: string;
+  landmark: string | null;
+  latitude: number;
+  longitude: number;
+  href: string;
+  accessType: string;
+  hoursSummary: string;
+  hoursReliable: boolean;
+  openNow: boolean | null;
+  amenities: string[];
+  accessibleBayCount: number | null;
+  accessibilityNotes: string | null;
+  connectors: Array<{ connectorType: string; maxKw: number | null }>;
+  installedConnectorCount: number;
+  availableConnectorCount: number;
+  publicStatus: string;
+  statusUpdatedAt: string | null;
+  maxKw: number | null;
+  startingPriceLabel: string | null;
+  energyPaisePerKwh: number | null;
+  pricePublished: boolean;
+  lastVerifiedAt: string | null;
+  distanceKm: number | null;
+  embedUrl?: string;
+};
 
 export type PublishedHubListResult = {
   page: number;

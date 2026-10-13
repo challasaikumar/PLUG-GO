@@ -1,4 +1,34 @@
-import { ACCESS_TYPES, CONNECTOR_TYPES } from "@/lib/catalogue/validation";
+export const CONNECTOR_TYPES = [
+  "ccs2",
+  "type2_ac",
+  "chademo",
+  "gbt_dc",
+  "gbt_ac",
+  "bharat_dc_001",
+  "bharat_ac_001",
+  "other",
+  "unknown",
+] as const;
+
+export const ACCESS_TYPES = [
+  "public",
+  "restricted",
+  "guest_only",
+  "hotel_guest",
+  "members",
+  "private",
+  "unknown",
+] as const;
+
+export const PUBLIC_STATUSES = [
+  "available",
+  "occupied",
+  "unavailable",
+  "unknown",
+  "stale",
+] as const;
+
+export type PublicStatus = (typeof PUBLIC_STATUSES)[number];
 
 export function connectorTypeLabel(type: string): string {
   switch (type) {
@@ -43,6 +73,23 @@ export function accessTypeLabel(type: string): string {
       return "Access unpublished";
     default:
       return type;
+  }
+}
+
+export function statusLabel(status: string): string {
+  switch (status) {
+    case "available":
+      return "Available";
+    case "occupied":
+      return "In use";
+    case "unavailable":
+      return "Unavailable";
+    case "stale":
+      return "Status unpublished";
+    case "unknown":
+      return "Status unpublished";
+    default:
+      return "Status unpublished";
   }
 }
 

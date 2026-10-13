@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { PublicStationListItem } from "@/lib/catalogue/station-service";
-import { connectorTypeLabel } from "@/lib/catalogue/labels";
+import type { PublicStationListItem } from "@/lib/catalogue/published-hubs";
+import { connectorTypeLabel, statusLabel } from "@/lib/catalogue/labels";
 import { INDIA_OVERVIEW } from "@/lib/maps/view";
-import { statusLabel } from "@/lib/status";
 
 type MapboxMapProps = {
   token: string;

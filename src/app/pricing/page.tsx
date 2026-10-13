@@ -1,7 +1,6 @@
 import { PageIntro } from "@/components/marketing/PageIntro";
 import { GuideCrumbs, GuidePage, GuideSiblings } from "@/components/marketing/GuideChrome";
 import { TariffSchematic } from "@/components/marketing/TariffSchematic";
-import { PricingCalculator } from "@/components/content/PricingCalculator";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { copy } from "@/content/copy";
 import { breadcrumbListJsonLd } from "@/lib/seo/jsonld";
@@ -123,7 +122,6 @@ export default function PricingPage() {
         </dl>
       </section>
 
-      <PricingCalculator />
       <GuideSiblings current="/pricing" />
     </GuidePage>
   );
