@@ -9,7 +9,7 @@ import { breadcrumbListJsonLd, contactPageJsonLd } from "@/lib/seo/jsonld";
 export const metadata = pageMeta({
   title: "Contact Us",
   description:
-    "Call +91 85559 66678 or email info@plugandgo.in. Registered office: D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230. Support is open 24x7.",
+    "Call +91 96666 12412 or email info@plugandgo.in. Registered office: D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230. Support is open 24x7.",
   path: "/contact",
   keywords: ["contact PLUG & GO", "EV charging support", "Mylavaram office"],
 });

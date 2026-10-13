@@ -35,9 +35,9 @@ export default async function HomePage({ searchParams }: PageProps) {
     <HeroFieldPage className="home-page">
       <HeroVideo>
         <h1 className="home-hero__title">
-          Find a compatible <em>charger</em>.
+          Find your <em>EV charging station</em>,
           <span className="home-hero__title-rest">
-            Know the <em className="home-hero__gold">price</em>. <em>Charge</em> with confidence.
+            hub across <em className="home-hero__gold">AP</em> &amp; <em>Telangana</em>
           </span>
         </h1>
         <p className="home-hero__journey">

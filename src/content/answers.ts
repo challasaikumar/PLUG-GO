@@ -17,7 +17,7 @@ export const homeFaqs = [
     id: "contact",
     question: "How do I contact PLUG & GO?",
     answer:
-      "Call +91 85559 66678 or email info@plugandgo.in. The registered office is D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230. Support hours are open 24x7.",
+      "Call +91 96666 12412 or email info@plugandgo.in. The registered office is D.No 8-18, Ramalayam Street, Mylavaram, N.T.R Dt, Andhra Pradesh - 521230. Support hours are open 24x7.",
   },
   {
     id: "app",

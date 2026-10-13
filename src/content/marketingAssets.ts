@@ -1,7 +1,7 @@
 /** Public NIKOL visual assets. Decorative only — not a Plug and Go catalogue. */
 export const marketingAssets = {
   heroVideo: "/nikolHome-IrVHCn3-.mp4",
-  heroPoster: "/nikol-ev.assets.Woblo/bg-4w2xffY1.png",
+  heroPoster: "/hero-poster.jpg",
   footerVideo: "/nikol-ev.assets.Woblo/Neuron_Animation-BdMMIzvu.mp4",
   footerVideoPoster: "/nikol-ev.assets.Woblo/Neuron_Animation-poster.jpg",
   cardFind: "/nikol-ev.assets.Woblo/cardImg1-CFrRQkc1.png",

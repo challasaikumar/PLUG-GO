@@ -70,7 +70,7 @@ describe("structured data", () => {
     const org = organizationJsonLd() as Record<string, unknown>;
     expect(org["@type"]).toBe("Organization");
     expect(org.name).toBe("PLUG & GO");
-    expect(org.telephone).toBe("+91 85559 66678");
+    expect(org.telephone).toBe("+91 96666 12412");
     expect(org.email).toBe("info@plugandgo.in");
     const address = org.address as Record<string, unknown>;
     expect(address.addressLocality).toBe("Mylavaram");
@@ -156,7 +156,7 @@ describe("answer engines", () => {
   it("publishes llms.txt from site facts only", () => {
     const text = llmsTxt();
     expect(text).toContain("info@plugandgo.in");
-    expect(text).toContain("+91 85559 66678");
+    expect(text).toContain("+91 96666 12412");
     expect(text).toContain("PLUG & GO EV CHARGING STATION");
     expect(text).toContain("Find a charger lists published PLUG & GO hubs only.");
     expect(text).not.toContain("linkedin.com");

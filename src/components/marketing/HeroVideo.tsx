@@ -7,6 +7,7 @@ import { marketingAssets } from "@/content/marketingAssets";
 export function HeroVideo({ children }: { children: ReactNode }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [needsTap, setNeedsTap] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -37,9 +38,11 @@ export function HeroVideo({ children }: { children: ReactNode }) {
       try {
         await video.play();
         setNeedsTap(false);
+        if (!video.paused) setPlaying(true);
         return true;
       } catch {
         setNeedsTap(true);
+        setPlaying(false);
         return false;
       }
     }
@@ -55,9 +58,18 @@ export function HeroVideo({ children }: { children: ReactNode }) {
     const onReady = () => {
       void tryPlay();
     };
+    const onPlaying = () => {
+      setNeedsTap(false);
+      setPlaying(true);
+    };
+    const onError = () => {
+      setPlaying(false);
+      setNeedsTap(false);
+    };
     video.addEventListener("loadeddata", onReady);
     video.addEventListener("canplay", onReady);
-    video.addEventListener("playing", () => setNeedsTap(false));
+    video.addEventListener("playing", onPlaying);
+    video.addEventListener("error", onError);
 
     let tries = 0;
     const retry = window.setInterval(() => {
@@ -87,6 +99,8 @@ export function HeroVideo({ children }: { children: ReactNode }) {
       window.clearInterval(retry);
       video.removeEventListener("loadeddata", onReady);
       video.removeEventListener("canplay", onReady);
+      video.removeEventListener("playing", onPlaying);
+      video.removeEventListener("error", onError);
       document.removeEventListener("pointerdown", unlock);
       document.removeEventListener("touchstart", unlock);
       document.removeEventListener("keydown", unlock);
@@ -101,7 +115,7 @@ export function HeroVideo({ children }: { children: ReactNode }) {
       <div className="home-hero__stage">
         <Image
           className="home-hero__poster"
-          src={marketingAssets.glimpse[0]}
+          src={marketingAssets.heroPoster}
           alt=""
           fill
           sizes="(min-width: 1024px) 1100px, 100vw"
@@ -110,7 +124,7 @@ export function HeroVideo({ children }: { children: ReactNode }) {
         />
         <video
           ref={videoRef}
-          className="home-hero__video"
+          className={playing ? "home-hero__video is-playing" : "home-hero__video"}
           muted
           playsInline
           loop
@@ -131,7 +145,10 @@ export function HeroVideo({ children }: { children: ReactNode }) {
               const video = videoRef.current;
               if (!video) return;
               video.muted = true;
-              void video.play().then(() => setNeedsTap(false)).catch(() => undefined);
+              void video.play().then(() => {
+                setNeedsTap(false);
+                setPlaying(true);
+              }).catch(() => undefined);
             }}
             aria-label="Play video"
           >

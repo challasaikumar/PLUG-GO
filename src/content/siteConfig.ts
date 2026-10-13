@@ -25,7 +25,7 @@ export const siteConfig = {
   },
   contact: {
     supportEmail: "info@plugandgo.in" as string | null,
-    supportPhone: "+91 85559 66678" as string | null,
+    supportPhone: "+91 96666 12412" as string | null,
     supportHours: "Open 24x7" as string | null,
     grievanceName: null as string | null,
     grievanceEmail: null as string | null,

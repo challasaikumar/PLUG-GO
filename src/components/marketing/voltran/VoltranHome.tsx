@@ -31,10 +31,10 @@ export function VoltranHome({
             <div className="vt-how__stage">
               <Image
                 className="vt-how__device"
-                src="/nikol-ev.assets.Woblo/plug%26goIMage.png"
-                alt="PLUG & GO app showing charge hubs and live station availability"
-                width={718}
-                height={899}
+                src="/image%20copy.png"
+                alt="PLUG & GO EV charger, up to 180 kW"
+                width={1086}
+                height={1448}
                 sizes="(min-width: 960px) 400px, 80vw"
                 unoptimized
               />
